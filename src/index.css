@@ -1,0 +1,59 @@
+@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&family=Be+Vietnam+Pro:wght@400;500;600;700&display=swap');
+@import "tailwindcss";
+
+@theme {
+  --font-sans: "Plus Jakarta Sans", "Be Vietnam Pro", ui-sans-serif, system-ui, sans-serif;
+  --font-display: "Plus Jakarta Sans", sans-serif;
+  
+  --color-brand-purple: #7C3AED;
+  --color-brand-pink: #EC4899;
+  --color-brand-blue: #3B82F6;
+  --color-bg-main: #FDF8FF;
+  --color-bg-card: #FFFFFF;
+}
+
+@layer base {
+  body {
+    @apply bg-bg-main text-slate-900 font-sans antialiased;
+  }
+}
+
+.glass {
+  @apply bg-white/70 backdrop-blur-md border border-white/20;
+}
+
+.card-shadow {
+  box-shadow: 0 4px 20px -2px rgba(0, 0, 0, 0.05);
+}
+
+.sidebar-item-active {
+  @apply bg-brand-purple/10 text-brand-purple font-semibold;
+}
+
+/* ==========================================================================
+   MUI + Tailwind CSS Coexistence Layer
+   ==========================================================================
+   This project uses BOTH MUI (Material UI) and Tailwind CSS v4 together.
+   - MUI handles complex components: dialogs, tables, forms, navigation, data grids
+   - Tailwind handles: layout, spacing, custom styling, utility classes, responsive design
+   - MUI theme is configured in src/theme/muiTheme.ts
+   - MUI's CssBaseline is applied in main.tsx — it sets box-sizing and resets margins
+   - Tailwind's @layer base styles are applied AFTER CssBaseline, so they take precedence
+   - Use the cn() utility from src/lib/utils.ts to merge Tailwind + MUI classes safely
+   ========================================================================== */
+
+/* Ensure MUI's box-sizing reset doesn't conflict with Tailwind */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+/* MUI CssBaseline sets html/body margin to 0 — Tailwind's @layer base
+   already handles body styles, so no override needed here. */
+
+/* Prevent MUI from overriding Tailwind's font smoothing */
+body {
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
