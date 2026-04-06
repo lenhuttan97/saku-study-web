@@ -1,0 +1,73 @@
+import React from 'react';
+import { MoreVertical } from 'lucide-react';
+import { cn } from '@/lib/utils';
+import { Button } from '@/components/ui';
+import { TaskCard } from './TaskCard';
+
+interface KanbanColumnProps {
+  title: string;
+  status: string;
+  color: string;
+  tasks: Array<{
+    id: number;
+    title: string;
+    status: 'done' | 'in-progress' | 'upcoming';
+    priority: 'high' | 'medium' | 'low';
+    dueDate: string;
+  }>;
+  onTaskClick?: (taskId: number) => void;
+  onMenuClick?: () => void;
+  className?: string;
+}
+
+export function KanbanColumn({
+  title,
+  status,
+  color,
+  tasks,
+  onTaskClick,
+  onMenuClick,
+  className,
+}: KanbanColumnProps) {
+  const filteredTasks = tasks.filter((t) => t.status === status);
+
+  return (
+    <div className={cn('space-y-6', className)}>
+      <div className="flex items-center justify-between px-2">
+        <div className="flex items-center gap-3">
+          <div className={cn('w-2 h-2 rounded-full', color)}></div>
+          <h3 className="text-sm font-bold text-slate-500 uppercase tracking-widest">
+            {title}
+          </h3>
+          <span className="bg-slate-100 text-slate-500 text-xs font-bold px-2 py-0.5 rounded-full">
+            {filteredTasks.length}
+          </span>
+        </div>
+        <Button variant="ghost" size="small" className="p-1" onClick={onMenuClick}>
+          <MoreVertical size={18} />
+        </Button>
+      </div>
+
+      <div className="space-y-4">
+        {filteredTasks.map((task) => (
+          <TaskCard
+            key={task.id}
+            title={task.title}
+            status={task.status}
+            priority={task.priority}
+            dueDate={task.dueDate}
+            onClick={() => onTaskClick?.(task.id)}
+          />
+        ))}
+
+        {filteredTasks.length === 0 && (
+          <div className="h-32 border-2 border-dashed border-slate-100 rounded-3xl flex items-center justify-center text-slate-300 text-sm italic">
+            No tasks in this stage
+          </div>
+        )}
+      </div>
+    </div>
+  );
+}
+
+export default KanbanColumn;

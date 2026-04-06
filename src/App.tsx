@@ -5,7 +5,7 @@
 
 import React from 'react';
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
-import Layout from './layout/Layout';
+import Layout from './components/layout/Layout';
 import Dashboard from './pages/Dashboard';
 import Courses from './pages/Courses';
 import CourseDetail from './pages/CourseDetail';
@@ -14,6 +14,7 @@ import Settings from './pages/Settings';
 import Login from './pages/Login';
 import Register from './pages/Register';
 import SetupSemester from './pages/SetupSemester';
+import Schedule from './pages/Schedule';
 
 export default function App() {
   return (
@@ -30,8 +31,8 @@ export default function App() {
           <Route path="courses" element={<Courses />} />
           <Route path="courses/:id" element={<CourseDetail />} />
           <Route path="tasks" element={<Tasks />} />
+          <Route path="schedule" element={<Schedule />} />
           <Route path="settings" element={<Settings />} />
-          <Route path="calendar" element={<div className="p-8 text-center text-slate-400 italic">Calendar view coming soon...</div>} />
         </Route>
 
         {/* Fallback */}

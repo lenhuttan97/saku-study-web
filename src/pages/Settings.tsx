@@ -10,19 +10,19 @@ import {
   Moon,
   Sun,
   Lock,
-  Bell,
   LogOut
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
+import { Button, Card, Input, List, ListItem, ListItemButton, ListItemIcon, ListItemText, ListSubheader } from '@/components/ui';
 
 const Settings = () => {
   const [activeSection, setActiveSection] = useState('profile');
 
   const sections = [
-    { id: 'profile', label: 'Your Profile', icon: User },
-    { id: 'appearance', label: 'Appearance', icon: Palette },
-    { id: 'localization', label: 'Localization', icon: Globe },
-    { id: 'security', label: 'Security', icon: Shield },
+    { id: 'profile', label: 'Your Profile', icon: <User size={20} /> },
+    { id: 'appearance', label: 'Appearance', icon: <Palette size={20} /> },
+    { id: 'localization', label: 'Localization', icon: <Globe size={20} /> },
+    { id: 'security', label: 'Security', icon: <Shield size={20} /> },
   ];
 
   return (
@@ -33,82 +33,125 @@ const Settings = () => {
       </header>
 
       <div className="grid grid-cols-1 md:grid-cols-12 gap-8">
-        {/* Sidebar */}
-        <aside className="md:col-span-4 space-y-2">
-          {sections.map((section) => (
-            <button
-              key={section.id}
-              onClick={() => setActiveSection(section.id)}
-              className={cn(
-                "w-full flex items-center justify-between px-6 py-4 rounded-2xl transition-all group",
-                activeSection === section.id 
-                  ? "bg-brand-purple text-white shadow-lg shadow-brand-purple/20" 
-                  : "bg-white border border-slate-100 text-slate-500 hover:bg-slate-50 hover:text-slate-800"
-              )}
+        {/* MUI List Sidebar */}
+        <aside className="md:col-span-4">
+          <Card elevation="low" className="p-2">
+            <List
+              component="nav"
+              sx={{ width: '100%', padding: 0 }}
+              subheader={
+                <ListSubheader 
+                  sx={{ 
+                    bgcolor: 'transparent', 
+                    fontWeight: 700, 
+                    fontSize: '0.75rem',
+                    color: 'text.secondary',
+                    letterSpacing: '0.08em',
+                    textTransform: 'uppercase'
+                  }}
+                >
+                  Settings
+                </ListSubheader>
+              }
             >
-              <div className="flex items-center gap-3">
-                <section.icon size={20} />
-                <span className="font-bold">{section.label}</span>
-              </div>
-              <ChevronRight size={18} className={cn("transition-transform", activeSection === section.id ? "translate-x-1" : "group-hover:translate-x-1")} />
-            </button>
-          ))}
-          
-          <div className="pt-6">
-            <button className="w-full flex items-center gap-3 px-6 py-4 rounded-2xl text-red-500 font-bold hover:bg-red-50 transition-all">
-              <LogOut size={20} />
-              <span>Sign Out</span>
-            </button>
-          </div>
+              {sections.map((section) => (
+                <ListItem key={section.id} disablePadding>
+                  <ListItemButton
+                    selected={activeSection === section.id}
+                    onClick={() => setActiveSection(section.id)}
+                    sx={{
+                      borderRadius: '12px',
+                      mb: 0.5,
+                      '&.Mui-selected': {
+                        bgcolor: 'primary.main',
+                        color: 'white',
+                        '& .MuiListItemIcon-root': {
+                          color: 'white',
+                        },
+                        '&:hover': {
+                          bgcolor: 'primary.dark',
+                        },
+                      },
+                    }}
+                  >
+                    <ListItemIcon sx={{ minWidth: 40, color: 'text.secondary' }}>
+                      {section.icon}
+                    </ListItemIcon>
+                    <ListItemText 
+                      primary={section.label} 
+                      primaryTypographyProps={{ fontWeight: 600 }}
+                    />
+                    <ChevronRight size={18} className={cn(
+                      "transition-transform",
+                      activeSection === section.id ? "rotate-90" : ""
+                    )} />
+                  </ListItemButton>
+                </ListItem>
+              ))}
+            </List>
+            
+            <div className="pt-4 px-2">
+              <Button 
+                variant="ghost" 
+                className="w-full justify-start text-red-500 hover:bg-red-50 hover:text-red-600"
+                startIcon={<LogOut size={20} />}
+              >
+                Sign Out
+              </Button>
+            </div>
+          </Card>
         </aside>
 
         {/* Content */}
-        <main className="md:col-span-8 bg-white rounded-3xl border border-slate-100 card-shadow p-8">
+        <main className="md:col-span-8">
           {activeSection === 'profile' && (
             <motion.div
               initial={{ opacity: 0, y: 10 }}
               animate={{ opacity: 1, y: 0 }}
               className="space-y-8"
             >
-              <div className="flex flex-col sm:flex-row items-center gap-8">
-                <div className="relative group">
-                  <div className="w-32 h-32 rounded-3xl bg-gradient-to-br from-brand-purple to-brand-pink flex items-center justify-center text-white text-4xl font-bold shadow-xl">
-                    S
+              <Card elevation="medium">
+                <div className="flex flex-col sm:flex-row items-center gap-8 p-6">
+                  <div className="relative group">
+                    <div className="w-32 h-32 rounded-3xl bg-gradient-to-br from-brand-purple to-brand-pink flex items-center justify-center text-white text-4xl font-bold shadow-xl">
+                      S
+                    </div>
+                    <Button 
+                      variant="primary" 
+                      size="small"
+                      className="absolute -bottom-2 -right-2 p-2 rounded-xl"
+                    >
+                      <Camera size={20} />
+                    </Button>
                   </div>
-                  <button className="absolute -bottom-2 -right-2 p-3 bg-white rounded-2xl shadow-lg border border-slate-100 text-brand-purple hover:scale-110 transition-transform">
-                    <Camera size={20} />
-                  </button>
+                  <div className="flex-1 text-center sm:text-left">
+                    <h3 className="text-2xl font-bold text-slate-800">Sakura</h3>
+                    <p className="text-slate-500">Premium Member since April 2026</p>
+                  </div>
                 </div>
-                <div className="flex-1 text-center sm:text-left">
-                  <h3 className="text-2xl font-bold text-slate-800">Sakura</h3>
-                  <p className="text-slate-500">Premium Member since April 2026</p>
-                </div>
-              </div>
+              </Card>
 
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
-                <div className="space-y-2">
-                  <label className="text-sm font-bold text-slate-500 ml-1">Username</label>
-                  <input 
-                    type="text" 
-                    defaultValue="sakura_design"
-                    className="w-full bg-slate-50 border border-slate-100 rounded-2xl py-3 px-4 text-slate-800 focus:ring-2 focus:ring-brand-purple/20 outline-none transition-all"
-                  />
-                </div>
-                <div className="space-y-2">
-                  <label className="text-sm font-bold text-slate-500 ml-1">Email Address</label>
-                  <input 
-                    type="email" 
-                    defaultValue="sakura@example.com"
-                    className="w-full bg-slate-50 border border-slate-100 rounded-2xl py-3 px-4 text-slate-800 focus:ring-2 focus:ring-brand-purple/20 outline-none transition-all"
-                  />
-                </div>
-              </div>
+              <Card elevation="low">
+                <div className="p-6 space-y-6">
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+                    <Input 
+                      label="Username"
+                      defaultValue="sakura_design"
+                    />
+                    <Input 
+                      label="Email Address"
+                      defaultValue="sakura@example.com"
+                      type="email"
+                    />
+                  </div>
 
-              <div className="pt-4 border-t border-slate-100 flex justify-end">
-                <button className="bg-brand-purple text-white px-8 py-3 rounded-2xl font-bold shadow-lg shadow-brand-purple/20 hover:scale-105 transition-all active:scale-95">
-                  Save Changes
-                </button>
-              </div>
+                  <div className="pt-4 border-t border-slate-100 flex justify-end">
+                    <Button>
+                      Save Changes
+                    </Button>
+                  </div>
+                </div>
+              </Card>
             </motion.div>
           )}
 
@@ -118,34 +161,44 @@ const Settings = () => {
               animate={{ opacity: 1, y: 0 }}
               className="space-y-8"
             >
-              <section className="space-y-4">
-                <h3 className="text-xl font-bold text-slate-800">Theme Toggle</h3>
-                <div className="grid grid-cols-2 gap-4">
-                  <button className="flex items-center justify-center gap-3 p-6 rounded-2xl border-2 border-brand-purple bg-brand-purple/5 text-brand-purple font-bold">
-                    <Sun size={24} />
-                    <span>Light Mode</span>
-                  </button>
-                  <button className="flex items-center justify-center gap-3 p-6 rounded-2xl border-2 border-slate-100 bg-slate-50 text-slate-400 font-bold hover:border-slate-200 transition-all">
-                    <Moon size={24} />
-                    <span>Dark Mode</span>
-                  </button>
-                </div>
-              </section>
+              <Card elevation="low">
+                <div className="p-6 space-y-6">
+                  <section className="space-y-4">
+                    <h3 className="text-xl font-bold text-slate-800">Theme Toggle</h3>
+                    <div className="grid grid-cols-2 gap-4">
+                      <Button 
+                        variant="primary"
+                        startIcon={<Sun size={24} />}
+                        className="flex-col h-auto py-6"
+                      >
+                        Light Mode
+                      </Button>
+                      <Button 
+                        variant="outline"
+                        startIcon={<Moon size={24} />}
+                        className="flex-col h-auto py-6"
+                      >
+                        Dark Mode
+                      </Button>
+                    </div>
+                  </section>
 
-              <section className="space-y-4">
-                <h3 className="text-xl font-bold text-slate-800">Background Atmosphere</h3>
-                <div className="grid grid-cols-3 gap-4">
-                  {['Serenity', 'Focus', 'Midnight'].map((bg) => (
-                    <button key={bg} className="p-4 rounded-2xl border border-slate-100 text-center hover:border-brand-purple transition-all group">
-                      <div className={cn(
-                        "h-20 rounded-xl mb-3 transition-transform group-hover:scale-105",
-                        bg === 'Serenity' ? 'bg-bg-main' : bg === 'Focus' ? 'bg-slate-100' : 'bg-slate-900'
-                      )}></div>
-                      <span className="text-sm font-bold text-slate-600">{bg}</span>
-                    </button>
-                  ))}
+                  <section className="space-y-4">
+                    <h3 className="text-xl font-bold text-slate-800">Background Atmosphere</h3>
+                    <div className="grid grid-cols-3 gap-4">
+                      {['Serenity', 'Focus', 'Midnight'].map((bg) => (
+                        <button key={bg} className="p-4 rounded-2xl border border-slate-100 text-center hover:border-brand-purple transition-all group">
+                          <div className={cn(
+                            "h-20 rounded-xl mb-3 transition-transform group-hover:scale-105",
+                            bg === 'Serenity' ? 'bg-bg-main' : bg === 'Focus' ? 'bg-slate-100' : 'bg-slate-900'
+                          )}></div>
+                          <span className="text-sm font-bold text-slate-600">{bg}</span>
+                        </button>
+                      ))}
+                    </div>
+                  </section>
                 </div>
-              </section>
+              </Card>
             </motion.div>
           )}
 
@@ -153,33 +206,41 @@ const Settings = () => {
             <motion.div
               initial={{ opacity: 0, y: 10 }}
               animate={{ opacity: 1, y: 0 }}
-              className="space-y-8"
+              className="space-y-6"
             >
-              <div className="p-6 bg-slate-50 rounded-3xl border border-slate-100 flex items-center justify-between">
-                <div className="flex items-center gap-4">
-                  <div className="w-12 h-12 bg-white rounded-xl flex items-center justify-center text-brand-purple shadow-sm">
-                    <Lock size={24} />
+              <Card elevation="low">
+                <div className="p-6 flex items-center justify-between">
+                  <div className="flex items-center gap-4">
+                    <div className="w-12 h-12 bg-slate-50 rounded-xl flex items-center justify-center text-brand-purple shadow-sm">
+                      <Lock size={24} />
+                    </div>
+                    <div>
+                      <h4 className="font-bold text-slate-800">Change Password</h4>
+                      <p className="text-xs text-slate-500">Last changed 3 months ago</p>
+                    </div>
                   </div>
-                  <div>
-                    <h4 className="font-bold text-slate-800">Change Password</h4>
-                    <p className="text-xs text-slate-500">Last changed 3 months ago</p>
-                  </div>
+                  <Button variant="outline" size="small">
+                    Update
+                  </Button>
                 </div>
-                <button className="text-brand-purple font-bold hover:underline">Update</button>
-              </div>
+              </Card>
 
-              <div className="p-6 bg-slate-50 rounded-3xl border border-slate-100 flex items-center justify-between">
-                <div className="flex items-center gap-4">
-                  <div className="w-12 h-12 bg-white rounded-xl flex items-center justify-center text-emerald-500 shadow-sm">
-                    <Shield size={24} />
+              <Card elevation="low">
+                <div className="p-6 flex items-center justify-between">
+                  <div className="flex items-center gap-4">
+                    <div className="w-12 h-12 bg-emerald-50 rounded-xl flex items-center justify-center text-emerald-500 shadow-sm">
+                      <Shield size={24} />
+                    </div>
+                    <div>
+                      <h4 className="font-bold text-slate-800">Two-Factor Authentication</h4>
+                      <p className="text-xs text-slate-500">Currently enabled for your account</p>
+                    </div>
                   </div>
-                  <div>
-                    <h4 className="font-bold text-slate-800">Two-Factor Authentication</h4>
-                    <p className="text-xs text-slate-500">Currently enabled for your account</p>
-                  </div>
+                  <Button variant="ghost" size="small" className="text-red-500 hover:text-red-600">
+                    Disable
+                  </Button>
                 </div>
-                <button className="text-red-500 font-bold hover:underline">Disable</button>
-              </div>
+              </Card>
             </motion.div>
           )}
         </main>

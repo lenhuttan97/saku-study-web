@@ -1,4 +1,5 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
 import { motion } from 'motion/react';
 import { 
   Calendar, 
@@ -12,6 +13,7 @@ import {
   MoreVertical
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
+import { Button, Card, ProgressBar } from '@/components/ui';
 
 const Dashboard = () => {
   const container = {
@@ -49,73 +51,75 @@ const Dashboard = () => {
         className="grid grid-cols-1 md:grid-cols-12 gap-6"
       >
         {/* Main Schedule */}
-        <motion.div variants={item} className="md:col-span-8 bg-white rounded-3xl p-8 border border-slate-100 card-shadow">
-          <div className="flex items-center justify-between mb-6">
-            <h2 className="text-xl font-bold text-slate-800">Your Schedule</h2>
-            <button className="text-brand-purple text-sm font-semibold hover:underline flex items-center gap-1">
-              View Calendar <ChevronRight size={16} />
-            </button>
-          </div>
-          
-          <div className="space-y-4">
-            {[
-              { time: '09:00 AM', title: 'Graphic Design Basics', room: 'Room 402', color: 'bg-brand-purple' },
-              { time: '11:30 AM', title: 'Typography Workshop', room: 'Studio A', color: 'bg-brand-pink' },
-              { time: '02:00 PM', title: 'Study Group: Color Theory', room: 'Library', color: 'bg-brand-blue' },
-            ].map((session, idx) => (
-              <div key={idx} className="flex items-center gap-4 p-4 rounded-2xl hover:bg-slate-50 transition-colors group">
-                <div className="w-20 text-sm font-medium text-slate-400">{session.time}</div>
-                <div className={cn("w-1 h-12 rounded-full", session.color)}></div>
-                <div className="flex-1">
-                  <h3 className="font-semibold text-slate-800">{session.title}</h3>
-                  <p className="text-sm text-slate-500">{session.room}</p>
+        <motion.div variants={item} className="md:col-span-8">
+          <Card elevation="medium" className="p-8">
+            <div className="flex items-center justify-between mb-6">
+              <h2 className="text-xl font-bold text-slate-800">Your Schedule</h2>
+              <Link to="/schedule" className="text-brand-purple text-sm font-semibold hover:underline flex items-center gap-1">
+                View Calendar <ChevronRight size={16} />
+              </Link>
+            </div>
+            
+            <div className="space-y-4">
+              {[
+                { time: '09:00 AM', title: 'Graphic Design Basics', room: 'Room 402', color: 'bg-brand-purple' },
+                { time: '11:30 AM', title: 'Typography Workshop', room: 'Studio A', color: 'bg-brand-pink' },
+                { time: '02:00 PM', title: 'Study Group: Color Theory', room: 'Library', color: 'bg-brand-blue' },
+              ].map((session, idx) => (
+                <div key={idx} className="flex items-center gap-4 p-4 rounded-2xl hover:bg-slate-50 transition-colors group">
+                  <div className="w-20 text-sm font-medium text-slate-400">{session.time}</div>
+                  <div className={cn("w-1 h-12 rounded-full", session.color)}></div>
+                  <div className="flex-1">
+                    <h3 className="font-semibold text-slate-800">{session.title}</h3>
+                    <p className="text-sm text-slate-500">{session.room}</p>
+                  </div>
+                  <Button variant="ghost" size="small" className="opacity-0 group-hover:opacity-100">
+                    <MoreVertical size={18} />
+                  </Button>
                 </div>
-                <button className="p-2 text-slate-300 hover:text-slate-600 opacity-0 group-hover:opacity-100 transition-all">
-                  <MoreVertical size={18} />
-                </button>
-              </div>
-            ))}
-          </div>
+              ))}
+            </div>
+          </Card>
         </motion.div>
 
         {/* To-Do List */}
-        <motion.div variants={item} className="md:col-span-4 bg-white rounded-3xl p-8 border border-slate-100 card-shadow flex flex-col">
-          <div className="flex items-center justify-between mb-6">
-            <h2 className="text-xl font-bold text-slate-800">To-Do List</h2>
-            <button className="p-2 bg-brand-purple/10 text-brand-purple rounded-xl hover:bg-brand-purple/20 transition-colors">
-              <Plus size={18} />
-            </button>
-          </div>
-          
-          <div className="space-y-4 flex-1">
-            {[
-              { task: 'Finish logo sketches', done: true },
-              { task: 'Read Chapter 4: Grid Systems', done: false },
-              { task: 'Upload portfolio draft', done: false },
-            ].map((todo, idx) => (
-              <div key={idx} className="flex items-center gap-3 group">
-                <button className={cn(
-                  "w-6 h-6 rounded-lg border-2 flex items-center justify-center transition-all",
-                  todo.done ? "bg-brand-purple border-brand-purple text-white" : "border-slate-200 hover:border-brand-purple"
-                )}>
-                  {todo.done && <CheckCircle2 size={14} />}
-                </button>
-                <span className={cn("text-sm transition-all", todo.done ? "text-slate-400 line-through" : "text-slate-700")}>
-                  {todo.task}
-                </span>
+        <motion.div variants={item} className="md:col-span-4">
+          <Card elevation="medium" className="p-8 flex flex-col h-full">
+            <div className="flex items-center justify-between mb-6">
+              <h2 className="text-xl font-bold text-slate-800">To-Do List</h2>
+              <Button variant="primary" size="small" className="p-2">
+                <Plus size={18} />
+              </Button>
+            </div>
+            
+            <div className="space-y-4 flex-1">
+              {[
+                { task: 'Finish logo sketches', done: true },
+                { task: 'Read Chapter 4: Grid Systems', done: false },
+                { task: 'Upload portfolio draft', done: false },
+              ].map((todo, idx) => (
+                <div key={idx} className="flex items-center gap-3 group">
+                  <button className={cn(
+                    "w-6 h-6 rounded-lg border-2 flex items-center justify-center transition-all",
+                    todo.done ? "bg-brand-purple border-brand-purple text-white" : "border-slate-200 hover:border-brand-purple"
+                  )}>
+                    {todo.done && <CheckCircle2 size={14} />}
+                  </button>
+                  <span className={cn("text-sm transition-all", todo.done ? "text-slate-400 line-through" : "text-slate-700")}>
+                    {todo.task}
+                  </span>
+                </div>
+              ))}
+            </div>
+            
+            <div className="mt-6 p-4 bg-slate-50 rounded-2xl">
+              <div className="flex justify-between text-xs font-semibold text-slate-500 mb-2">
+                <span>Daily Progress</span>
+                <span>33%</span>
               </div>
-            ))}
-          </div>
-          
-          <div className="mt-6 p-4 bg-slate-50 rounded-2xl">
-            <div className="flex justify-between text-xs font-semibold text-slate-500 mb-2">
-              <span>Daily Progress</span>
-              <span>33%</span>
+              <ProgressBar value={33} size="small" />
             </div>
-            <div className="h-2 bg-slate-200 rounded-full overflow-hidden">
-              <div className="h-full bg-brand-purple w-1/3 rounded-full"></div>
-            </div>
-          </div>
+          </Card>
         </motion.div>
 
         {/* Focus Mode */}
@@ -129,9 +133,9 @@ const Dashboard = () => {
             </div>
             <h2 className="text-xl font-bold mb-2">Focus Mode</h2>
             <p className="text-slate-400 text-sm mb-6">Block distractions and get things done.</p>
-            <button className="w-full py-3 bg-white text-slate-900 font-bold rounded-2xl hover:bg-slate-100 transition-colors">
+            <Button fullWidth className="bg-white text-slate-900 hover:bg-slate-100">
               Start Session
-            </button>
+            </Button>
           </div>
         </motion.div>
 
@@ -145,13 +149,15 @@ const Dashboard = () => {
         </motion.div>
 
         {/* Streak */}
-        <motion.div variants={item} className="md:col-span-4 bg-white rounded-3xl p-8 border border-slate-100 card-shadow flex items-center gap-6">
-          <div className="w-16 h-16 bg-orange-100 rounded-2xl flex items-center justify-center text-orange-500">
-            <Flame size={32} fill="currentColor" />
-          </div>
-          <div>
-            <h2 className="text-3xl font-bold text-slate-800">12</h2>
-            <p className="text-slate-500 font-medium">Day Study Streak</p>
+        <motion.div variants={item} className="md:col-span-4">
+          <div className="bg-white rounded-3xl border border-slate-100 card-shadow p-8 flex items-center gap-6 h-full">
+            <div className="w-16 h-16 bg-orange-100 rounded-2xl flex items-center justify-center text-orange-500 shrink-0">
+              <Flame size={32} fill="currentColor" />
+            </div>
+            <div className="shrink-0">
+              <h2 className="text-3xl font-bold text-slate-800">12</h2>
+              <p className="text-slate-500 font-medium">Day Study Streak</p>
+            </div>
           </div>
         </motion.div>
       </motion.div>

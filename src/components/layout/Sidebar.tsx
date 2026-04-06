@@ -14,7 +14,7 @@ import { cn } from '@/lib/utils';
 const Sidebar = () => {
   const menuItems = [
     { icon: Home, label: 'Home', path: '/' },
-    { icon: Calendar, label: 'Calendar', path: '/calendar' },
+    { icon: Calendar, label: 'Schedule', path: '/schedule' },
     { icon: BookOpen, label: 'Courses', path: '/courses' },
     { icon: CheckSquare, label: 'Tasks', path: '/tasks' },
   ];

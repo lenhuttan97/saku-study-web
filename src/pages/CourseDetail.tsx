@@ -16,16 +16,17 @@ import {
   MoreVertical
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
+import { Button, Tabs, Card, Badge, Input, Dialog, DialogHeader, DialogContent, DialogActions } from '@/components/ui';
 
 const CourseDetail = () => {
   const { id } = useParams();
   const [activeTab, setActiveTab] = useState('info');
 
   const tabs = [
-    { id: 'info', label: 'Info', icon: Info },
-    { id: 'schedule', label: 'Schedule', icon: Calendar },
-    { id: 'materials', label: 'Materials', icon: FileText },
-    { id: 'tasks', label: 'Tasks', icon: CheckSquare },
+    { id: 'info', label: 'Info', icon: <Info size={18} /> },
+    { id: 'schedule', label: 'Schedule', icon: <Calendar size={18} /> },
+    { id: 'materials', label: 'Materials', icon: <FileText size={18} /> },
+    { id: 'tasks', label: 'Tasks', icon: <CheckSquare size={18} /> },
   ];
 
   // Mock data
@@ -76,38 +77,23 @@ const CourseDetail = () => {
           </div>
           
           <div className="flex items-center gap-4">
-            <button className="p-3 bg-white border border-slate-100 rounded-2xl text-slate-400 hover:text-slate-600 transition-colors shadow-sm">
+            <Button variant="outline">
               <MoreVertical size={20} />
-            </button>
-            <button className="bg-brand-purple text-white px-8 py-3 rounded-2xl font-bold shadow-lg shadow-brand-purple/20 hover:scale-105 transition-all active:scale-95">
+            </Button>
+            <Button>
               Edit Course
-            </button>
+            </Button>
           </div>
         </div>
       </header>
 
+      {/* MUI Tabs */}
       <div className="bg-white rounded-3xl border border-slate-100 card-shadow overflow-hidden">
-        <div className="flex border-b border-slate-100 px-4">
-          {tabs.map((tab) => (
-            <button
-              key={tab.id}
-              onClick={() => setActiveTab(tab.id)}
-              className={cn(
-                "flex items-center gap-2 px-6 py-5 text-sm font-bold transition-all relative",
-                activeTab === tab.id ? "text-brand-purple" : "text-slate-400 hover:text-slate-600"
-              )}
-            >
-              <tab.icon size={18} />
-              <span>{tab.label}</span>
-              {activeTab === tab.id && (
-                <motion.div 
-                  layoutId="activeTab"
-                  className="absolute bottom-0 left-0 right-0 h-1 bg-brand-purple rounded-t-full"
-                />
-              )}
-            </button>
-          ))}
-        </div>
+        <Tabs 
+          tabs={tabs} 
+          value={activeTab} 
+          onChange={setActiveTab}
+        />
 
         <div className="p-8">
           <AnimatePresence mode="wait">
@@ -128,26 +114,26 @@ const CourseDetail = () => {
                   </section>
                   
                   <section className="grid grid-cols-1 sm:grid-cols-2 gap-6">
-                    <div className="p-6 bg-slate-50 rounded-3xl border border-slate-100">
+                    <Card elevation="low">
                       <h4 className="font-bold text-slate-800 mb-2">Next Lesson</h4>
                       <p className="text-slate-500 text-sm mb-4">Tomorrow at 09:00 AM</p>
-                      <div className="flex items-center gap-2 text-brand-purple font-bold">
+                      <div className="flex items-center gap-2 text-brand-purple font-bold cursor-pointer hover:underline">
                         <Calendar size={16} />
                         <span>Add to Calendar</span>
                       </div>
-                    </div>
-                    <div className="p-6 bg-slate-50 rounded-3xl border border-slate-100">
+                    </Card>
+                    <Card elevation="low">
                       <h4 className="font-bold text-slate-800 mb-2">Current Progress</h4>
                       <p className="text-slate-500 text-sm mb-4">You have completed 8/12 lessons</p>
                       <div className="h-2 bg-slate-200 rounded-full overflow-hidden">
                         <div className="h-full bg-brand-purple w-2/3 rounded-full"></div>
                       </div>
-                    </div>
+                    </Card>
                   </section>
                 </div>
                 
                 <div className="space-y-8">
-                  <div className="bg-brand-purple/5 p-8 rounded-3xl border border-brand-purple/10">
+                  <Card elevation="none" className="bg-brand-purple/5 border border-brand-purple/10">
                     <h3 className="text-lg font-bold text-slate-800 mb-4">Quick Stats</h3>
                     <div className="space-y-4">
                       <div className="flex justify-between items-center">
@@ -163,7 +149,7 @@ const CourseDetail = () => {
                         <span className="font-bold text-brand-purple">A-</span>
                       </div>
                     </div>
-                  </div>
+                  </Card>
                 </div>
               </motion.div>
             )}
@@ -178,14 +164,14 @@ const CourseDetail = () => {
               >
                 <div className="flex items-center justify-between">
                   <h3 className="text-xl font-bold text-slate-800">Course Materials</h3>
-                  <button className="flex items-center gap-2 text-brand-purple font-bold hover:underline">
-                    <Plus size={18} /> Upload New
-                  </button>
+                  <Button variant="outline" size="small" startIcon={<Plus size={18} />}>
+                    Upload New
+                  </Button>
                 </div>
                 
                 <div className="grid grid-cols-1 gap-4">
                   {course.materials.map((file, idx) => (
-                    <div key={idx} className="flex items-center justify-between p-5 bg-slate-50 rounded-2xl border border-slate-100 hover:border-brand-purple/20 transition-all group">
+                    <Card key={idx} elevation="low" className="flex items-center justify-between">
                       <div className="flex items-center gap-4">
                         <div className="w-12 h-12 bg-white rounded-xl flex items-center justify-center text-brand-purple shadow-sm">
                           <FileText size={24} />
@@ -196,14 +182,14 @@ const CourseDetail = () => {
                         </div>
                       </div>
                       <div className="flex items-center gap-2">
-                        <button className="p-2 text-slate-400 hover:text-brand-purple transition-colors">
+                        <Button variant="ghost" size="small">
                           <Download size={20} />
-                        </button>
-                        <button className="p-2 text-slate-400 hover:text-slate-600 transition-colors">
+                        </Button>
+                        <Button variant="ghost" size="small">
                           <ExternalLink size={20} />
-                        </button>
+                        </Button>
                       </div>
-                    </div>
+                    </Card>
                   ))}
                 </div>
               </motion.div>
@@ -219,9 +205,9 @@ const CourseDetail = () => {
               >
                 <div className="flex items-center justify-between">
                   <h3 className="text-xl font-bold text-slate-800">Assignments & Tasks</h3>
-                  <button className="bg-brand-purple text-white px-6 py-2 rounded-xl font-bold text-sm shadow-md">
+                  <Button size="small">
                     Add Task
-                  </button>
+                  </Button>
                 </div>
                 
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
@@ -230,7 +216,7 @@ const CourseDetail = () => {
                       <h4 className="text-sm font-bold text-slate-400 uppercase tracking-wider px-2">{status.replace('-', ' ')}</h4>
                       <div className="space-y-4">
                         {course.tasks.filter(t => t.status === status).map(task => (
-                          <div key={task.id} className="p-5 bg-white border border-slate-100 rounded-2xl shadow-sm hover:shadow-md transition-all">
+                          <Card key={task.id} elevation="low">
                             <h5 className="font-bold text-slate-800 mb-3">{task.title}</h5>
                             <div className="flex items-center justify-between">
                               <span className="text-xs font-semibold text-slate-400 flex items-center gap-1">
@@ -241,7 +227,7 @@ const CourseDetail = () => {
                                 status === 'done' ? 'bg-emerald-500' : status === 'in-progress' ? 'bg-brand-purple' : 'bg-slate-300'
                               )}></div>
                             </div>
-                          </div>
+                          </Card>
                         ))}
                         {course.tasks.filter(t => t.status === status).length === 0 && (
                           <div className="p-8 border-2 border-dashed border-slate-100 rounded-2xl text-center text-slate-400 text-sm italic">
