@@ -1,5 +1,11 @@
 # Sanctuary - Academic Planner
 
+<div align="center">
+  <img width="1200" height="475" alt="Sanctuary Banner" src="https://github.com/user-attachments/assets/0aa67016-6eaf-458a-adb2-6e31a0763ed6" />
+</div>
+
+> Academic planner / course management web app - Find your focus.
+
 ## 🚀 Tech Stack
 
 | Layer | Technology |
@@ -12,44 +18,6 @@
 | Animations | Framer Motion (`motion`) |
 | Icons | lucide-react |
 | Backend | Firebase (Firestore + Auth) |
-
-## 📁 Project Structure
-
-```
-src/
-├── components/
-│   ├── layout/           # Layout shell components
-│   │   ├── Layout.tsx    # Main layout with Sidebar + TopNav
-│   │   ├── Sidebar.tsx   # Navigation sidebar
-│   │   └── TopNav.tsx    # Top header bar
-│   └── ui/               # Reusable UI components (MUI wrappers)
-│       ├── Button.tsx
-│       ├── Input.tsx
-│       ├── Card.tsx
-│       ├── Dialog.tsx
-│       ├── Tabs.tsx
-│       ├── Badge.tsx
-│       ├── List.tsx
-│       ├── ToggleButton.tsx
-│       └── Progress.tsx
-├── pages/                # Page components
-│   ├── Dashboard.tsx    # Home page
-│   ├── Courses.tsx       # Course list + create modal
-│   ├── CourseDetail.tsx  # Course detail with tabs
-│   ├── Tasks.tsx         # Task kanban board
-│   ├── Schedule.tsx      # Weekly schedule calendar
-│   ├── Settings.tsx      # User settings
-│   ├── Login.tsx         # Login form (public)
-│   ├── Register.tsx      # Registration form (public)
-│   └── SetupSemester.tsx # First-time setup wizard
-├── lib/
-│   └── utils.ts          # cn() helper (clsx + tailwind-merge)
-├── theme/
-│   └── muiTheme.ts       # MUI theme configuration
-├── App.tsx               # Router configuration
-├── main.tsx              # Entry point
-└── index.css            # Tailwind v4 + custom theme
-```
 
 ## 🎨 Design System
 
@@ -67,7 +35,7 @@ src/
 - **Be Vietnam Pro** - Body text
 
 ### Styling Strategy (Dual System)
-- **MUI (Material UI)**: Complex components - Dialog, Tabs, List, Progress, Cards, Buttons
+- **MUI (Material UI)**: Complex components - Dialog, Tabs, List, Progress, Cards, Buttons, Badges
 - **Tailwind CSS**: Layout, spacing, typography, custom styling
 
 ## 🛠️ Commands
