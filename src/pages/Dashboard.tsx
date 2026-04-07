@@ -1,19 +1,9 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { motion } from 'motion/react';
-import { 
-  Calendar, 
-  CheckCircle2, 
-  Clock, 
-  Flame, 
-  Plus, 
-  Quote, 
-  Timer,
-  ChevronRight,
-  MoreVertical
-} from 'lucide-react';
-import { cn } from '@/lib/utils';
+import { Calendar, ChevronRight, Plus, CheckCircle2 } from 'lucide-react';
 import { Button, Card, ProgressBar } from '@/components/ui';
+import { ScheduleItem, TodoItem, FocusWidget, QuoteCard, StreakWidget } from '@/components/ui';
 
 const Dashboard = () => {
   const container = {
@@ -30,6 +20,18 @@ const Dashboard = () => {
     hidden: { y: 20, opacity: 0 },
     show: { y: 0, opacity: 1 }
   };
+
+  const scheduleItems = [
+    { time: '09:00 AM', title: 'Graphic Design Basics', room: 'Room 402', color: 'bg-brand-purple' },
+    { time: '11:30 AM', title: 'Typography Workshop', room: 'Studio A', color: 'bg-brand-pink' },
+    { time: '02:00 PM', title: 'Study Group: Color Theory', room: 'Library', color: 'bg-brand-blue' },
+  ];
+
+  const todoItems = [
+    { task: 'Finish logo sketches', done: true },
+    { task: 'Read Chapter 4: Grid Systems', done: false },
+    { task: 'Upload portfolio draft', done: false },
+  ];
 
   return (
     <div className="max-w-7xl mx-auto space-y-8">
@@ -50,7 +52,7 @@ const Dashboard = () => {
         animate="show"
         className="grid grid-cols-1 md:grid-cols-12 gap-6"
       >
-        {/* Main Schedule */}
+        {/* Main Schedule - Using ScheduleItem */}
         <motion.div variants={item} className="md:col-span-8">
           <Card elevation="medium" className="p-8">
             <div className="flex items-center justify-between mb-6">
@@ -61,28 +63,14 @@ const Dashboard = () => {
             </div>
             
             <div className="space-y-4">
-              {[
-                { time: '09:00 AM', title: 'Graphic Design Basics', room: 'Room 402', color: 'bg-brand-purple' },
-                { time: '11:30 AM', title: 'Typography Workshop', room: 'Studio A', color: 'bg-brand-pink' },
-                { time: '02:00 PM', title: 'Study Group: Color Theory', room: 'Library', color: 'bg-brand-blue' },
-              ].map((session, idx) => (
-                <div key={idx} className="flex items-center gap-4 p-4 rounded-2xl hover:bg-slate-50 transition-colors group">
-                  <div className="w-20 text-sm font-medium text-slate-400">{session.time}</div>
-                  <div className={cn("w-1 h-12 rounded-full", session.color)}></div>
-                  <div className="flex-1">
-                    <h3 className="font-semibold text-slate-800">{session.title}</h3>
-                    <p className="text-sm text-slate-500">{session.room}</p>
-                  </div>
-                  <Button variant="ghost" size="small" className="opacity-0 group-hover:opacity-100">
-                    <MoreVertical size={18} />
-                  </Button>
-                </div>
+              {scheduleItems.map((session, idx) => (
+                <ScheduleItem key={idx} {...session} />
               ))}
             </div>
           </Card>
         </motion.div>
 
-        {/* To-Do List */}
+        {/* To-Do List - Using TodoItem */}
         <motion.div variants={item} className="md:col-span-4">
           <Card elevation="medium" className="p-8 flex flex-col h-full">
             <div className="flex items-center justify-between mb-6">
@@ -93,22 +81,8 @@ const Dashboard = () => {
             </div>
             
             <div className="space-y-4 flex-1">
-              {[
-                { task: 'Finish logo sketches', done: true },
-                { task: 'Read Chapter 4: Grid Systems', done: false },
-                { task: 'Upload portfolio draft', done: false },
-              ].map((todo, idx) => (
-                <div key={idx} className="flex items-center gap-3 group">
-                  <button className={cn(
-                    "w-6 h-6 rounded-lg border-2 flex items-center justify-center transition-all",
-                    todo.done ? "bg-brand-purple border-brand-purple text-white" : "border-slate-200 hover:border-brand-purple"
-                  )}>
-                    {todo.done && <CheckCircle2 size={14} />}
-                  </button>
-                  <span className={cn("text-sm transition-all", todo.done ? "text-slate-400 line-through" : "text-slate-700")}>
-                    {todo.task}
-                  </span>
-                </div>
+              {todoItems.map((todo, idx) => (
+                <TodoItem key={idx} {...todo} />
               ))}
             </div>
             
@@ -122,43 +96,22 @@ const Dashboard = () => {
           </Card>
         </motion.div>
 
-        {/* Focus Mode */}
-        <motion.div variants={item} className="md:col-span-4 bg-gradient-to-br from-slate-900 to-slate-800 rounded-3xl p-8 text-white card-shadow relative overflow-hidden group">
-          <div className="absolute -right-4 -bottom-4 opacity-10 group-hover:scale-110 transition-transform duration-500">
-            <Timer size={160} />
-          </div>
-          <div className="relative z-10">
-            <div className="w-12 h-12 bg-white/10 rounded-2xl flex items-center justify-center mb-6 backdrop-blur-sm">
-              <Timer size={24} className="text-brand-purple" />
-            </div>
-            <h2 className="text-xl font-bold mb-2">Focus Mode</h2>
-            <p className="text-slate-400 text-sm mb-6">Block distractions and get things done.</p>
-            <Button fullWidth className="bg-white text-slate-900 hover:bg-slate-100">
-              Start Session
-            </Button>
-          </div>
-        </motion.div>
-
-        {/* Quote */}
-        <motion.div variants={item} className="md:col-span-4 bg-brand-purple/5 rounded-3xl p-8 border border-brand-purple/10 card-shadow flex flex-col justify-center items-center text-center">
-          <Quote size={32} className="text-brand-purple/20 mb-4" />
-          <p className="text-lg font-medium italic text-slate-700 leading-relaxed">
-            "Design is not just what it looks like and feels like. Design is how it works."
-          </p>
-          <span className="mt-4 text-sm font-bold text-brand-purple">— Steve Jobs</span>
-        </motion.div>
-
-        {/* Streak */}
+        {/* Focus Mode - Using FocusWidget */}
         <motion.div variants={item} className="md:col-span-4">
-          <div className="bg-white rounded-3xl border border-slate-100 card-shadow p-8 flex items-center gap-6 h-full">
-            <div className="w-16 h-16 bg-orange-100 rounded-2xl flex items-center justify-center text-orange-500 shrink-0">
-              <Flame size={32} fill="currentColor" />
-            </div>
-            <div className="shrink-0">
-              <h2 className="text-3xl font-bold text-slate-800">12</h2>
-              <p className="text-slate-500 font-medium">Day Study Streak</p>
-            </div>
-          </div>
+          <FocusWidget />
+        </motion.div>
+
+        {/* Quote - Using QuoteCard */}
+        <motion.div variants={item} className="md:col-span-4">
+          <QuoteCard 
+            quote="Design is not just what it looks like and feels like. Design is how it works." 
+            author="Steve Jobs" 
+          />
+        </motion.div>
+
+        {/* Streak - Using StreakWidget */}
+        <motion.div variants={item} className="md:col-span-4">
+          <StreakWidget count={12} />
         </motion.div>
       </motion.div>
     </div>

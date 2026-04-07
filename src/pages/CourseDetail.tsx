@@ -1,22 +1,15 @@
 import React, { useState } from 'react';
-import { useParams, Link } from 'react-router-dom';
+import { useParams } from 'react-router-dom';
 import { motion, AnimatePresence } from 'motion/react';
 import { 
   Info, 
   Calendar, 
   FileText, 
   CheckSquare, 
-  ChevronLeft,
-  User,
-  MapPin,
-  Clock,
-  Download,
-  Plus,
-  ExternalLink,
-  MoreVertical
+  Plus
 } from 'lucide-react';
-import { cn } from '@/lib/utils';
-import { Button, Tabs, Card, Badge, Input, Dialog, DialogHeader, DialogContent, DialogActions } from '@/components/ui';
+import { Button, Tabs, Card } from '@/components/ui';
+import { CourseHeader, MaterialItem, CourseTasksList, CourseScheduleGrid } from '@/components/ui';
 
 const CourseDetail = () => {
   const { id } = useParams();
@@ -51,41 +44,21 @@ const CourseDetail = () => {
     ]
   };
 
+  const scheduleEvents = [
+    { day: 1, time: '09:00', title: 'Lecture', location: 'Room 402', type: 'Lecture' as const, color: 'bg-brand-purple' },
+    { day: 3, time: '11:00', title: 'Workshop', location: 'Studio A', type: 'Workshop' as const, color: 'bg-brand-pink' },
+  ];
+
   return (
     <div className="max-w-7xl mx-auto space-y-8">
-      <header className="space-y-6">
-        <Link to="/courses" className="inline-flex items-center gap-2 text-slate-500 hover:text-brand-purple font-semibold transition-colors group">
-          <ChevronLeft size={20} className="group-hover:-translate-x-1 transition-transform" />
-          <span>Back to Courses</span>
-        </Link>
-        
-        <div className="flex flex-col md:flex-row md:items-end justify-between gap-6">
-          <div className="flex items-center gap-6">
-            <div className={cn("w-20 h-20 rounded-3xl flex items-center justify-center text-white shadow-xl", course.color)}>
-              <Info size={40} />
-            </div>
-            <div>
-              <h1 className="text-4xl font-bold text-slate-900 tracking-tight">{course.name}</h1>
-              <div className="flex flex-wrap items-center gap-4 mt-2 text-slate-500 font-medium">
-                <span className="flex items-center gap-1.5"><User size={16} /> {course.teacher}</span>
-                <span className="w-1.5 h-1.5 rounded-full bg-slate-300"></span>
-                <span className="flex items-center gap-1.5"><MapPin size={16} /> {course.location}</span>
-                <span className="w-1.5 h-1.5 rounded-full bg-slate-300"></span>
-                <span className="flex items-center gap-1.5"><Clock size={16} /> {course.semester}</span>
-              </div>
-            </div>
-          </div>
-          
-          <div className="flex items-center gap-4">
-            <Button variant="outline">
-              <MoreVertical size={20} />
-            </Button>
-            <Button>
-              Edit Course
-            </Button>
-          </div>
-        </div>
-      </header>
+      {/* Using CourseHeader */}
+      <CourseHeader 
+        name={course.name}
+        teacher={course.teacher}
+        location={course.location}
+        semester={course.semester}
+        color={course.color}
+      />
 
       {/* MUI Tabs */}
       <div className="bg-white rounded-3xl border border-slate-100 card-shadow overflow-hidden">
@@ -171,25 +144,7 @@ const CourseDetail = () => {
                 
                 <div className="grid grid-cols-1 gap-4">
                   {course.materials.map((file, idx) => (
-                    <Card key={idx} elevation="low" className="flex items-center justify-between">
-                      <div className="flex items-center gap-4">
-                        <div className="w-12 h-12 bg-white rounded-xl flex items-center justify-center text-brand-purple shadow-sm">
-                          <FileText size={24} />
-                        </div>
-                        <div>
-                          <h4 className="font-bold text-slate-800">{file.name}</h4>
-                          <p className="text-xs text-slate-500">{file.size} • Uploaded {file.date}</p>
-                        </div>
-                      </div>
-                      <div className="flex items-center gap-2">
-                        <Button variant="ghost" size="small">
-                          <Download size={20} />
-                        </Button>
-                        <Button variant="ghost" size="small">
-                          <ExternalLink size={20} />
-                        </Button>
-                      </div>
-                    </Card>
+                    <MaterialItem key={idx} {...file} />
                   ))}
                 </div>
               </motion.div>
@@ -201,43 +156,9 @@ const CourseDetail = () => {
                 initial={{ opacity: 0, x: 20 }}
                 animate={{ opacity: 1, x: 0 }}
                 exit={{ opacity: 0, x: -20 }}
-                className="space-y-8"
               >
-                <div className="flex items-center justify-between">
-                  <h3 className="text-xl font-bold text-slate-800">Assignments & Tasks</h3>
-                  <Button size="small">
-                    Add Task
-                  </Button>
-                </div>
-                
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-                  {['upcoming', 'in-progress', 'done'].map((status) => (
-                    <div key={status} className="space-y-4">
-                      <h4 className="text-sm font-bold text-slate-400 uppercase tracking-wider px-2">{status.replace('-', ' ')}</h4>
-                      <div className="space-y-4">
-                        {course.tasks.filter(t => t.status === status).map(task => (
-                          <Card key={task.id} elevation="low">
-                            <h5 className="font-bold text-slate-800 mb-3">{task.title}</h5>
-                            <div className="flex items-center justify-between">
-                              <span className="text-xs font-semibold text-slate-400 flex items-center gap-1">
-                                <Clock size={12} /> Due {task.dueDate}
-                              </span>
-                              <div className={cn(
-                                "w-2 h-2 rounded-full",
-                                status === 'done' ? 'bg-emerald-500' : status === 'in-progress' ? 'bg-brand-purple' : 'bg-slate-300'
-                              )}></div>
-                            </div>
-                          </Card>
-                        ))}
-                        {course.tasks.filter(t => t.status === status).length === 0 && (
-                          <div className="p-8 border-2 border-dashed border-slate-100 rounded-2xl text-center text-slate-400 text-sm italic">
-                            No tasks here
-                          </div>
-                        )}
-                      </div>
-                    </div>
-                  ))}
-                </div>
+                {/* Using CourseTasksList */}
+                <CourseTasksList tasks={course.tasks} />
               </motion.div>
             )}
             
@@ -247,39 +168,9 @@ const CourseDetail = () => {
                 initial={{ opacity: 0, x: 20 }}
                 animate={{ opacity: 1, x: 0 }}
                 exit={{ opacity: 0, x: -20 }}
-                className="space-y-6"
               >
-                <h3 className="text-xl font-bold text-slate-800">Weekly Schedule</h3>
-                <div className="bg-slate-50 rounded-3xl p-8 border border-slate-100 overflow-x-auto">
-                  <div className="min-w-[600px] grid grid-cols-6 gap-4">
-                    <div className="col-span-1"></div>
-                    {['Mon', 'Tue', 'Wed', 'Thu', 'Fri'].map(day => (
-                      <div key={day} className="text-center font-bold text-slate-400 text-sm uppercase py-2">{day}</div>
-                    ))}
-                    
-                    {['09:00', '10:00', '11:00', '12:00', '13:00', '14:00'].map(time => (
-                      <React.Fragment key={time}>
-                        <div className="text-right pr-4 text-xs font-bold text-slate-400 py-4">{time}</div>
-                        {[1, 2, 3, 4, 5].map(day => (
-                          <div key={`${day}-${time}`} className="bg-white rounded-xl border border-slate-100 h-16 relative group">
-                            {day === 1 && time === '09:00' && (
-                              <div className="absolute inset-1 bg-brand-purple/10 border-l-4 border-brand-purple rounded-lg p-2 z-10">
-                                <p className="text-[10px] font-bold text-brand-purple">Lecture</p>
-                                <p className="text-[10px] text-slate-600 truncate">Room 402</p>
-                              </div>
-                            )}
-                            {day === 3 && time === '11:00' && (
-                              <div className="absolute inset-1 bg-brand-pink/10 border-l-4 border-brand-pink rounded-lg p-2 z-10">
-                                <p className="text-[10px] font-bold text-brand-pink">Workshop</p>
-                                <p className="text-[10px] text-slate-600 truncate">Studio A</p>
-                              </div>
-                            )}
-                          </div>
-                        ))}
-                      </React.Fragment>
-                    ))}
-                  </div>
-                </div>
+                {/* Using CourseScheduleGrid */}
+                <CourseScheduleGrid events={scheduleEvents} />
               </motion.div>
             )}
           </AnimatePresence>
