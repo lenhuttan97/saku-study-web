@@ -13,6 +13,7 @@ Inventory of all features in the Sanctuary academic planner application.
 | FT-007 | Settings | ui-done | `settings/` |
 | FT-008 | Navigation Shell | done | `navigation-shell/` |
 | FT-009 | UI Component Library | done | `ui-component-library/` |
+| FT-010 | Design System & UI Refactoring | pending | `design-system/` |
 
 ## Status Legend
 
@@ -37,3 +38,4 @@ Each feature has a dedicated folder with `index.md` in `docs/features/<feature-n
 | Settings | Settings | Settings page with sidebar. Backend pending. |
 | Navigation Shell | Layout, Sidebar, TopNav | Layout with nested routes. Auth guard pending. |
 | UI Component Library | 16 components in ui/ | Reusable MUI + Tailwind components. |
+| Design System | All pages | Serene Sakura design system - color tokens, no-line rule, glassmorphism, dark mode. |
