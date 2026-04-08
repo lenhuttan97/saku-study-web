@@ -1,7 +1,7 @@
 # TASK-001C: Email Verification & Password Reset
 
 ## Status
-pending
+done
 
 ## Parent Task
 - **TASK-001**: [Firebase Auth Integration](./TASK-001-firebase-auth.md)
@@ -13,14 +13,14 @@ pending
 Implement email verification and password reset flows.
 
 ## Scope
-- [ ] Add email verification send function
-- [ ] Add email verification check on auth state change
-- [ ] Add "Verify email" UI state
-- [ ] Add resend verification email button
-- [ ] Implement password reset send email function
-- [ ] Create password reset page/UI
-- [ ] Add password reset confirmation UI
-- [ ] Add error handling for verification scenarios
+- [x] Add email verification send function
+- [x] Add email verification check on auth state change
+- [x] Add "Verify email" UI state
+- [x] Add resend verification email button
+- [x] Implement password reset send email function
+- [x] Create password reset page/UI
+- [x] Add password reset confirmation UI
+- [x] Add error handling for verification scenarios
 
 ## Dependencies
 - Firebase Auth

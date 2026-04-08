@@ -1,5 +1,5 @@
 import React from 'react';
-import { NavLink } from 'react-router-dom';
+import { NavLink, useNavigate } from 'react-router-dom';
 import { 
   Home, 
   Calendar, 
@@ -10,8 +10,17 @@ import {
   Sparkles
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
+import { useAuth } from '@/context/AuthContext';
 
 const Sidebar = () => {
+  const { logout } = useAuth();
+  const navigate = useNavigate();
+
+  const handleLogout = async () => {
+    await logout();
+    navigate('/login');
+  };
+
   const menuItems = [
     { icon: Home, label: 'Home', path: '/' },
     { icon: Calendar, label: 'Schedule', path: '/schedule' },
@@ -63,7 +72,11 @@ const Sidebar = () => {
           <Settings size={20} />
           <span>Settings</span>
         </NavLink>
-        <button className="w-full flex items-center gap-3 px-4 py-3 rounded-xl text-slate-500 hover:bg-red-50 hover:text-red-600 transition-all duration-200 mt-1">
+        <button 
+          type="button"
+          onClick={handleLogout}
+          className="w-full flex items-center gap-3 px-4 py-3 rounded-xl text-slate-500 hover:bg-red-50 hover:text-red-600 transition-all duration-200 mt-1"
+        >
           <LogOut size={20} />
           <span>Logout</span>
         </button>
