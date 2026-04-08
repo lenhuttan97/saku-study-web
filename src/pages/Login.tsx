@@ -1,10 +1,35 @@
-import React from 'react';
-import { Link } from 'react-router-dom';
+import React, { useState } from 'react';
+import { Link, useNavigate } from 'react-router-dom';
 import { motion } from 'motion/react';
 import { Sparkles, ChevronRight } from 'lucide-react';
 import { Button, Input, Card, SocialLoginButtons, AuthFormHeader } from '@/components/ui';
+import { auth } from '@/firebase/config';
+import { signInWithEmailAndPassword } from 'firebase/auth';
+import { getFirebaseErrorMessage } from '@/utils/firebaseError';
 
 const Login = () => {
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState('');
+  const navigate = useNavigate();
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setLoading(true);
+    setError('');
+
+    try {
+      await signInWithEmailAndPassword(auth, email, password);
+      // Redirect to dashboard on successful login
+      navigate('/');
+    } catch (err) {
+      setError(getFirebaseErrorMessage(err));
+    } finally {
+      setLoading(false);
+    }
+  };
+
   return (
     <div className="min-h-screen bg-bg-main flex items-center justify-center p-6">
       <motion.div 
@@ -19,11 +44,13 @@ const Login = () => {
             subtitle="Continue your journey to serenity."
           />
 
-          <form className="space-y-6">
+          <form onSubmit={handleSubmit} className="space-y-6">
             <Input 
               label="Email Address"
               placeholder="name@example.com"
               type="email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
             />
 
             <div className="space-y-2">
@@ -34,14 +61,21 @@ const Login = () => {
               <Input 
                 type="password" 
                 placeholder="••••••••"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
               />
             </div>
 
-            <Link to="/">
-              <Button fullWidth endIcon={<ChevronRight size={20} />}>
-                Login to Sanctuary
-              </Button>
-            </Link>
+            {error && <p className="text-sm font-medium text-red-500 px-1">{error}</p>}
+
+            <Button
+              type="submit"
+              fullWidth
+              endIcon={<ChevronRight size={20} />}
+              disabled={loading}
+            >
+              {loading ? 'Signing in...' : 'Login to Sanctuary'}
+            </Button>
           </form>
 
           <SocialLoginButtons />

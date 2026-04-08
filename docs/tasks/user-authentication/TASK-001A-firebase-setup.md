@@ -1,7 +1,7 @@
 # TASK-001A: Install and Configure Firebase
 
 ## Status
-pending
+done
 
 ## Parent Task
 - **TASK-001**: [Firebase Auth Integration](./TASK-001-firebase-auth.md)
@@ -13,14 +13,14 @@ pending
 Install Firebase SDK and configure Firebase project with Firebase Auth.
 
 ## Scope
-- [ ] Install firebase package
-- [ ] Create firebase config file
-- [ ] Initialize Firebase with config
-- [ ] Enable Firebase Auth in Firebase Console
-- [ ] Add Firebase config to environment variables
+- [x] Install firebase package
+- [x] Create firebase config file (`src/firebase/config.ts`)
+- [x] Initialize Firebase with config
+- [x] Add Firebase config to environment variables (`.env.example`, `.env.local`)
+- [x] Enable Firebase Auth in Firebase Console
 
 ## Dependencies
-- firebase package
+- firebase package (installed)
 
 ## Estimated Effort
 30 minutes

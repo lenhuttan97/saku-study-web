@@ -1,10 +1,42 @@
-import React from 'react';
-import { Link } from 'react-router-dom';
+import React, { useState } from 'react';
+import { Link, useNavigate } from 'react-router-dom';
 import { motion } from 'motion/react';
 import { Sparkles, ChevronRight } from 'lucide-react';
 import { Button, Input, Card, SocialLoginButtons, AuthFormHeader } from '@/components/ui';
+import { auth } from '@/firebase/config';
+import { createUserWithEmailAndPassword } from 'firebase/auth';
+import { getFirebaseErrorMessage } from '@/utils/firebaseError';
 
 const Register = () => {
+  const [name, setName] = useState('');
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [termsAccepted, setTermsAccepted] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState('');
+  const navigate = useNavigate();
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!termsAccepted) {
+      setError('Please accept the Terms of Service and Privacy Policy');
+      return;
+    }
+    
+    setLoading(true);
+    setError('');
+    
+    try {
+      await createUserWithEmailAndPassword(auth, email, password);
+      // Redirect to dashboard on successful registration
+      navigate('/');
+    } catch (err) {
+      setError(getFirebaseErrorMessage(err));
+    } finally {
+      setLoading(false);
+    }
+  };
+
   return (
     <div className="min-h-screen bg-bg-main flex items-center justify-center p-6">
       <motion.div 
@@ -19,34 +51,50 @@ const Register = () => {
             subtitle="Create your academic sanctuary today."
           />
 
-          <form className="space-y-6">
+          <form onSubmit={handleSubmit} className="space-y-6">
             <Input 
               label="Full Name"
               placeholder="Sakura Tanaka"
+              value={name}
+              onChange={(e) => setName(e.target.value)}
             />
 
             <Input 
               label="Email Address"
               placeholder="name@example.com"
               type="email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
             />
 
             <Input 
               label="Password"
               type="password" 
               placeholder="••••••••"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
             />
 
             <div className="flex items-center gap-3 px-1">
-              <input type="checkbox" className="w-5 h-5 rounded-lg border-2 border-slate-200 text-brand-purple focus:ring-brand-purple/20 transition-all" />
+              <input 
+                type="checkbox" 
+                className="w-5 h-5 rounded-lg border-2 border-slate-200 text-brand-purple focus:ring-brand-purple/20 transition-all" 
+                checked={termsAccepted}
+                onChange={(e) => setTermsAccepted(e.target.checked)}
+              />
               <span className="text-xs font-medium text-slate-500">I agree to the <button className="text-brand-purple font-bold hover:underline">Terms of Service</button> and <button className="text-brand-purple font-bold hover:underline">Privacy Policy</button></span>
             </div>
 
-            <Link to="/">
-              <Button fullWidth endIcon={<ChevronRight size={20} />}>
-                Create Account
-              </Button>
-            </Link>
+            {error && <p className="text-sm font-medium text-red-500 px-1">{error}</p>}
+
+            <Button
+              type="submit"
+              fullWidth
+              endIcon={<ChevronRight size={20} />}
+              disabled={loading}
+            >
+              {loading ? 'Creating account...' : 'Create Account'}
+            </Button>
           </form>
 
           <SocialLoginButtons />

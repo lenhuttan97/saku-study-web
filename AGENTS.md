@@ -62,13 +62,14 @@ src/
   lib/
     utils.ts          # cn() helper (clsx + tailwind-merge)
   types/              # TypeScript interfaces/types — future
-  services/           # API clients (Firebase, etc.) — future
+  firebase/           # Firebase configuration and middleware layer
   store/              # Redux store — future
 ```
 
 - **Path alias**: `@/*` → `./*` (project root). Import as `@/src/lib/utils` or `@/src/components/layout/Layout`.
 - **No backend** — all logic is client-side. Express is a dependency but unused.
-- **No state management library** — uses React local state.
+- **State direction**: project stack targets Redux Toolkit. New data flows should be designed so Redux slices dispatch async logic through a service/middleware layer instead of calling Firebase directly from pages/components.
+- **Firebase boundary rule**: keep Firebase implementation isolated from business logic. Treat Firebase as an infrastructure adapter that can later be replaced by a server API without rewriting feature/business logic.
 
 ## Design System (in `src/index.css`)
 
