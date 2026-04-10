@@ -3,7 +3,8 @@ import { Link } from 'react-router-dom';
 import { motion } from 'motion/react';
 import { Calendar, ChevronRight, Plus, CheckCircle2 } from 'lucide-react';
 import { Button, Card, ProgressBar } from '@/components/ui';
-import { ScheduleItem, TodoItem, FocusWidget, QuoteCard, StreakWidget } from '@/components/ui';
+import { ScheduleItem, FocusWidget, QuoteCard, StreakWidget } from '@/components/ui';
+import { TodoItem } from '@/features/tasks';
 
 const Dashboard = () => {
   const container = {

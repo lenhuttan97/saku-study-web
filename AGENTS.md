@@ -31,46 +31,6 @@ npm run lint      # tsc --noEmit (no ESLint configured)
 
 **No test framework is configured.** Do not invent one without asking.
 
-## Architecture
-
-```
-src/
-  main.tsx            # entry point
-  App.tsx             # router — routes defined here
-  index.css           # Tailwind v4 + custom theme + utility classes
-  components/         # reusable UI components
-    layout/           # shell/layout components
-      Layout.tsx      # shell with Sidebar + TopNav + <Outlet>
-      Sidebar.tsx     # navigation sidebar
-      TopNav.tsx      # top header bar
-    ui/               # small reusable UI primitives (Button, Card, etc.) — future
-  pages/              # page components (route-level)
-    Dashboard.tsx     # home page
-    Courses.tsx       # course list + create modal
-    CourseDetail.tsx  # course detail with tabs
-    Tasks.tsx         # task kanban board
-    Settings.tsx      # user settings
-    Login.tsx         # login form (public)
-    Register.tsx      # registration form (public)
-    SetupSemester.tsx # first-time setup wizard
-  features/           # feature-specific modules (future)
-    auth/             # authentication feature
-    courses/          # course management feature
-    tasks/            # task management feature
-    calendar/         # calendar feature
-  hooks/              # shared custom hooks — future
-  lib/
-    utils.ts          # cn() helper (clsx + tailwind-merge)
-  types/              # TypeScript interfaces/types — future
-  firebase/           # Firebase configuration and middleware layer
-  store/              # Redux store — future
-```
-
-- **Path alias**: `@/*` → `./*` (project root). Import as `@/src/lib/utils` or `@/src/components/layout/Layout`.
-- **No backend** — all logic is client-side. Express is a dependency but unused.
-- **State direction**: project stack targets Redux Toolkit. New data flows should be designed so Redux slices dispatch async logic through a service/middleware layer instead of calling Firebase directly from pages/components.
-- **Firebase boundary rule**: keep Firebase implementation isolated from business logic. Treat Firebase as an infrastructure adapter that can later be replaced by a server API without rewriting feature/business logic.
-
 ## Design System (in `src/index.css`)
 
 | Token | Value |
@@ -155,3 +115,38 @@ MuiYourComponent: {
 - Feature-specific modules go in `src/features/<feature>/` (future use).
 - Routes defined directly in `App.tsx`.
 - No auth backend yet — Login/Register/Setup are placeholder pages.
+
+## Architecture Rules
+
+For detailed architectural guidelines including separation of concerns, service layer abstraction, and feature-based organization, see: @.opencode/rules/architecture.md
+
+## Project Rules
+
+This project follows a hierarchical rules system:
+
+### Global Rules (Default)
+- Located at: `~/.config/opencode/rules/`
+- Applied to all projects by default
+- Include general coding standards, security, performance, etc.
+
+### Project-Specific Rules
+- Located at: `@.opencode/rules/`
+- Override global rules when project has special requirements
+- Include architecture-specific guidelines for this project
+
+Current project rules:
+- **architecture.md** - Architecture guidelines for service/hook/feature organization
+- **github-sync.md** - GitHub synchronization rules
+- **mui-tailwind.md** - MUI + Tailwind CSS + Framer Motion integration guidelines (THIS IS THE PRIMARY STYLING REFERENCE)
+
+## Project Structure Guidelines
+
+Following the architectural rules defined in @.opencode/rules/architecture.md, this project implements:
+
+1. **Feature-Based Organization** in `src/features/<feature>/`
+2. **Service Layer Abstraction** in `src/services/` with Firebase interface
+3. **Custom Hooks** in `src/hooks/` for business logic
+4. **Centralized Types** in `src/types/`
+5. **Thin Pages** in `src/pages/` that only orchestrate data from hooks
+
+This structure ensures proper separation of business logic from UI components and allows for easy replacement of the Firebase backend.

@@ -1,7 +1,7 @@
 import React from 'react';
 import { cn } from '@/lib/utils';
 
-interface ScheduleEvent {
+interface CourseScheduleEvent {
   day: number;
   time: string;
   title: string;
@@ -11,7 +11,7 @@ interface ScheduleEvent {
 }
 
 interface CourseScheduleGridProps {
-  events: ScheduleEvent[];
+  events: CourseScheduleEvent[];
 }
 
 export const CourseScheduleGrid = ({ events }: CourseScheduleGridProps) => {

@@ -2,8 +2,10 @@ import React from 'react';
 import { CheckCircle2 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
+import type { Task } from '@/types';
+
 interface TodoItemProps {
-  task: string;
+  task: Task;
   done: boolean;
 }
 
@@ -17,7 +19,7 @@ export const TodoItem = ({ task, done }: TodoItemProps) => {
         {done && <CheckCircle2 size={14} />}
       </button>
       <span className={cn("text-sm transition-all", done ? "text-slate-400 line-through" : "text-slate-700")}>
-        {task}
+        {task.title}
       </span>
     </div>
   );

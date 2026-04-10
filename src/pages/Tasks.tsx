@@ -5,7 +5,8 @@ import {
   Filter, 
   Calendar
 } from 'lucide-react';
-import { Button, SearchInput, KanbanColumn } from '@/components/ui';
+import { Button, SearchInput } from '@/components/ui';
+import { KanbanColumn } from '@/features/tasks';
 
 interface Task {
   id: number;

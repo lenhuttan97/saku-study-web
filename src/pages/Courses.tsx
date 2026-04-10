@@ -1,7 +1,8 @@
 import React, { useState } from 'react';
 import { Plus, Filter } from 'lucide-react';
-import { Button, Dialog, DialogHeader, DialogContent, DialogActions, Input, Card, SearchInput, CourseCard } from '@/components/ui';
-import type { CourseType } from '@/components/ui';
+import { Button, Dialog, DialogHeader, DialogContent, DialogActions, Input, Card, SearchInput } from '@/components/ui';
+import { CourseCard } from '@/features/courses';
+import type { Course } from '@/types';
 
 const Courses = () => {
   const [showModal, setShowModal] = useState(false);

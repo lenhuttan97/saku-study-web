@@ -2,6 +2,18 @@ import React from 'react';
 import { FileText, Download, ExternalLink } from 'lucide-react';
 import { Button, Card } from '@/components/ui';
 
+export interface CourseMaterial {
+  id: string;
+  courseId: string;
+  title: string;
+  description?: string;
+  type: 'video' | 'document' | 'link' | 'assignment';
+  url?: string;
+  duration?: number; // in minutes
+  completed: boolean;
+  order: number;
+}
+
 interface MaterialItemProps {
   name: string;
   size: string;

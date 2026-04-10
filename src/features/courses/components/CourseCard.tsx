@@ -5,15 +5,7 @@ import { BookOpen, MapPin, User, MoreVertical } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { Card } from '@/components/ui';
 
-export interface Course {
-  id: string;
-  name: string;
-  teacher: string;
-  location: string;
-  description: string;
-  progress: number;
-  color: string;
-}
+import type { Course } from '@/types';
 
 interface CourseCardProps {
   course: Course;
