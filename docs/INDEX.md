@@ -12,7 +12,7 @@ Main documentation for the Sanctuary academic planner application.
 
 ## Project Status
 
-### Features (10 total)
+### Features (11 total)
 | ID | Feature | Status | Implementation |
 |----|---------|--------|----------------|
 | FT-001 | User Authentication | ui-done | Firebase Auth integration |
@@ -25,13 +25,14 @@ Main documentation for the Sanctuary academic planner application.
 | FT-008 | Navigation Shell | done | Auth guard, responsive |
 | FT-009 | UI Component Library | done | 16 reusable components |
 | FT-010 | Design System & UI Refactoring | pending | Color tokens, no-line, glassmorphism, dark mode |
+| FT-011 | Internationalization (i18n) | pending | Multi-language support (Vietnamese + English) |
 
 ### Milestones
 
 | Milestone | Description | Due Date | Issues |
 |-----------|-------------|----------|--------|
 | FT-001 - FT-008 | Core Features | 2026-04-30 | 27 |
-| **Design System & UI Refactoring** | Serene Sakura Design System | 2026-05-31 | 14 |
+| **Design System & UI Refactoring** | Serene Sakura Design System | 2026-05-31 | 15 |
 
 ## Quick Links
 
@@ -54,6 +55,13 @@ Main documentation for the Sanctuary academic planner application.
 
 ### Tasks
 - [Tasks Index](./tasks/INDEX.md)
+
+## Reports
+
+| Report | Description |
+|--------|-------------|
+| [Project Analysis](./reports/project-analysis.md) | Full project analysis - tech stack, architecture, gaps |
+| [Design Mockup Analysis](./reports/design-mockup-analysis.md) | Design system specs, screens, and patterns from mockups |
 
 ## Tech Stack
 

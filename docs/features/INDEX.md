@@ -14,6 +14,7 @@ Inventory of all features in the Sanctuary academic planner application.
 | FT-008 | Navigation Shell | done | `navigation-shell/` |
 | FT-009 | UI Component Library | done | `ui-component-library/` |
 | FT-010 | Design System & UI Refactoring | pending | `design-system/` |
+| FT-011 | Internationalization (i18n) | pending | `i18n/` |
 
 ## Status Legend
 
