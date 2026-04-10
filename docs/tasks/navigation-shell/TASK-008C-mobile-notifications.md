@@ -18,10 +18,10 @@ Add mobile responsive sidebar and notifications dropdown.
 - [ ] Add overlay when sidebar is open on mobile
 - [ ] Close sidebar on route change (mobile)
 - [ ] Create NotificationsDropdown component
-- [ ] Add notifications to TopNav
+- [x] Add notifications to TopNav (Bell icon with badge)
 - [ ] Add mock notifications data
 - [ ] Add mark as read functionality
-- [ ] Add notification badge count
+- [x] Add notification badge count
 
 ## Dependencies
 - None (UI only)

@@ -1,7 +1,7 @@
 # TASK-005: Semester Setup Data Persistence
 
 ## Status
-pending
+in_progress
 
 ## Feature
 - **FT-005**: [Semester Setup](../features/semester-setup/index.md)
@@ -14,7 +14,7 @@ Save setup wizard data to Firestore and complete user profile.
 |----|------|--------|--------|
 | TASK-005A | [Form Validation](./TASK-005A-form-validation.md) | pending | 1h |
 | TASK-005B | [Save Setup Data to Firestore](./TASK-005B-save-setup.md) | pending | 1.5h |
-| TASK-005C | [Redirect Logic](./TASK-005C-redirect.md) | pending | 30m |
+| TASK-005C | [Redirect Logic](./TASK-005C-redirect.md) | in_progress | 30m |
 
 ## Dependencies
 - Firebase Firestore

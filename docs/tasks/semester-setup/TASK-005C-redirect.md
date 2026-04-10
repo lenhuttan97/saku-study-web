@@ -1,7 +1,7 @@
 # TASK-005C: Redirect Logic
 
 ## Status
-pending
+in_progress
 
 ## Parent Task
 - **TASK-005**: [Semester Setup Data Persistence](./TASK-005-semester-setup.md)
@@ -13,6 +13,7 @@ pending
 Add redirect logic after setup completion.
 
 ## Scope
+- [ ] Add setupCompleted flag to user profile in Firestore
 - [ ] Check setup status on app load
 - [ ] Add redirect to /setup if not completed
 - [ ] Add redirect to / (dashboard) after completion

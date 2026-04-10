@@ -6,14 +6,14 @@ Tasks for implementing backend functionality. Each task is linked to its corresp
 
 | ID | Task | Feature | Status | Effort |
 |----|------|---------|--------|--------|
-| TASK-001 | Firebase Auth Integration | FT-001: User Authentication | in_progress | 4h |
+| TASK-001 | Firebase Auth Integration | FT-001: User Authentication | ✅ done | 4h |
 | TASK-002 | Course CRUD Operations | FT-002: Course Management | pending | 5h |
 | TASK-003 | Task Management Backend | FT-003: Task Management | pending | 4h |
 | TASK-004 | Dashboard Real Data Integration | FT-004: Dashboard | pending | 4h |
 | TASK-005 | Semester Setup Data Persistence | FT-005: Semester Setup | pending | 3h |
 | TASK-006 | Schedule View Real Data | FT-006: Schedule View | pending | 6h |
 | TASK-007 | Settings Backend Integration | FT-007: Settings | pending | 4h |
-| TASK-008 | Auth Guard & Route Protection | FT-008: Navigation Shell | pending | 3.5h |
+| TASK-008 | Auth Guard & Route Protection | FT-008: Navigation Shell | 🔄 in_progress | 3.5h |
 | TASK-0009 | Define color design tokens | Color Refactoring | pending | 1h |
 | TASK-0010 | Refactor layout components | Color Refactoring | pending | 1h |
 | TASK-0011 | Refactor MUI wrapper components | Color Refactoring | pending | 1h |

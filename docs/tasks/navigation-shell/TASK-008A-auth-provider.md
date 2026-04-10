@@ -1,7 +1,7 @@
 # TASK-008A: Auth Provider Integration
 
 ## Status
-pending
+done
 
 ## Parent Task
 - **TASK-008**: [Auth Guard & Route Protection](./TASK-008-auth-guard.md)
@@ -13,12 +13,15 @@ pending
 Integrate AuthProvider with Layout and protected routes.
 
 ## Scope
-- [ ] Wrap App with AuthProvider
-- [ ] Add auth state check in App.tsx
-- [ ] Add redirect to /login if not authenticated
+- [x] Wrap App with AuthProvider
+- [x] Add auth state check in App.tsx
+- [x] Add redirect to /login if not authenticated
+- [x] Persist auth state across page refresh
+
+## Out of Scope (handled by TASK-005C)
 - [ ] Add setup status check
 - [ ] Add redirect to /setup if setup not completed
-- [ ] Persist auth state across page refresh
+- [ ] Redirect to dashboard after setup completion
 
 ## Dependencies
 - Firebase Auth

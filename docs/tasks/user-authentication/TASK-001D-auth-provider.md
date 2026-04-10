@@ -1,7 +1,7 @@
 # TASK-001D: Auth Provider & Session Management
 
 ## Status
-pending
+done
 
 ## Parent Task
 - **TASK-001**: [Firebase Auth Integration](./TASK-001-firebase-auth.md)
@@ -13,14 +13,14 @@ pending
 Implement AuthProvider context and session management.
 
 ## Scope
-- [ ] Create AuthContext using React Context API
-- [ ] Implement AuthProvider component
-- [ ] Add auth state listener (onAuthStateChanged)
-- [ ] Add user object to context (uid, email, emailVerified)
-- [ ] Add loading state
-- [ ] Add login/logout functions to context
-- [ ] Add isAuthenticated computed property
-- [ ] Add session persistence check
+- [x] Create AuthContext using React Context API
+- [x] Implement AuthProvider component
+- [x] Add auth state listener (onAuthStateChanged)
+- [x] Add user object to context (uid, email, emailVerified)
+- [x] Add loading state
+- [x] Add login/logout functions to context
+- [x] Add isAuthenticated computed property
+- [x] Add session persistence check
 
 ## Dependencies
 - Firebase Auth
