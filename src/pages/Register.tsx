@@ -3,8 +3,9 @@ import { Link, useNavigate } from 'react-router-dom';
 import { motion } from 'motion/react';
 import { Sparkles, ChevronRight } from 'lucide-react';
 import { Button, Input, Card, SocialLoginButtons, AuthFormHeader } from '@/components/ui';
+import { useAuth } from '@/context/AuthContext';
 import { auth } from '@/firebase/config';
-import { createUserWithEmailAndPassword } from 'firebase/auth';
+import { createUserWithEmailAndPassword, sendEmailVerification } from 'firebase/auth';
 import { getFirebaseErrorMessage } from '@/utils/firebaseError';
 
 const Register = () => {
@@ -15,6 +16,7 @@ const Register = () => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
   const navigate = useNavigate();
+  const { loginWithGoogle, loginWithGithub, loginWithFacebook } = useAuth();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -27,8 +29,32 @@ const Register = () => {
     setError('');
     
     try {
-      await createUserWithEmailAndPassword(auth, email, password);
-      // Redirect to dashboard on successful registration
+      const userCredential = await createUserWithEmailAndPassword(auth, email, password);
+      
+      // Send verification email after successful registration
+      await sendEmailVerification(userCredential.user);
+      
+      // Redirect to email verification page
+      navigate('/verify-email');
+    } catch (err) {
+      setError(getFirebaseErrorMessage(err));
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleSocialLogin = async (provider: 'google' | 'github' | 'facebook') => {
+    setLoading(true);
+    setError('');
+
+    try {
+      if (provider === 'google') {
+        await loginWithGoogle();
+      } else if (provider === 'github') {
+        await loginWithGithub();
+      } else {
+        await loginWithFacebook();
+      }
       navigate('/');
     } catch (err) {
       setError(getFirebaseErrorMessage(err));
@@ -97,7 +123,11 @@ const Register = () => {
             </Button>
           </form>
 
-          <SocialLoginButtons />
+          <SocialLoginButtons
+            onGoogleClick={() => handleSocialLogin('google')}
+            onGithubClick={() => handleSocialLogin('github')}
+            onFacebookClick={() => handleSocialLogin('facebook')}
+          />
 
           <p className="text-center text-sm font-medium text-slate-500">
             Already have an account? <Link to="/login" className="text-brand-purple font-bold hover:underline">Welcome back</Link>

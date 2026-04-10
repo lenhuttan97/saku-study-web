@@ -1,6 +1,8 @@
 import React from 'react';
+import { useNavigate } from 'react-router-dom';
 import { ChevronRight, LogOut } from 'lucide-react';
 import { cn } from '@/lib/utils';
+import { useAuth } from '@/context/AuthContext';
 import { Button, Card, List, ListItem, ListItemButton, ListItemIcon, ListItemText, ListSubheader } from '@/components/ui';
 
 interface SettingsSection {
@@ -16,6 +18,14 @@ interface SettingsSidebarProps {
 }
 
 export const SettingsSidebar = ({ sections, activeSection, onSectionChange }: SettingsSidebarProps) => {
+  const { logout } = useAuth();
+  const navigate = useNavigate();
+
+  const handleSignOut = async () => {
+    await logout();
+    navigate('/login');
+  };
+
   return (
     <Card elevation="low" className="p-2">
       <List

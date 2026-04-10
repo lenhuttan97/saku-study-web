@@ -6,7 +6,7 @@ Tasks for implementing backend functionality. Each task is linked to its corresp
 
 | ID | Task | Feature | Status | Effort |
 |----|------|---------|--------|--------|
-| TASK-001 | Firebase Auth Integration | FT-001: User Authentication | pending | 4h |
+| TASK-001 | Firebase Auth Integration | FT-001: User Authentication | in_progress | 4h |
 | TASK-002 | Course CRUD Operations | FT-002: Course Management | pending | 5h |
 | TASK-003 | Task Management Backend | FT-003: Task Management | pending | 4h |
 | TASK-004 | Dashboard Real Data Integration | FT-004: Dashboard | pending | 4h |

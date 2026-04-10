@@ -12,9 +12,14 @@ import {
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { Button, Card, Input, SettingsSidebar } from '@/components/ui';
+import { useAuth } from '@/context/AuthContext';
 
 const Settings = () => {
   const [activeSection, setActiveSection] = useState('profile');
+  const { user } = useAuth();
+  const displayName = user?.displayName || user?.email?.split('@')[0] || 'Member';
+  const userEmail = user?.email || 'sanctuary@example.com';
+  const avatarInitial = displayName.charAt(0).toUpperCase();
 
   const sections = [
     { id: 'profile', label: 'Your Profile', icon: <User size={20} /> },
@@ -52,7 +57,7 @@ const Settings = () => {
                 <div className="flex flex-col sm:flex-row items-center gap-8 p-6">
                   <div className="relative group">
                     <div className="w-32 h-32 rounded-3xl bg-gradient-to-br from-brand-purple to-brand-pink flex items-center justify-center text-white text-4xl font-bold shadow-xl">
-                      S
+                      {avatarInitial}
                     </div>
                     <Button 
                       variant="primary" 
@@ -63,8 +68,8 @@ const Settings = () => {
                     </Button>
                   </div>
                   <div className="flex-1 text-center sm:text-left">
-                    <h3 className="text-2xl font-bold text-slate-800">Sakura</h3>
-                    <p className="text-slate-500">Premium Member since April 2026</p>
+                    <h3 className="text-2xl font-bold text-slate-800">{displayName}</h3>
+                    <p className="text-slate-500">Member since April 2026</p>
                   </div>
                 </div>
               </Card>
@@ -74,11 +79,11 @@ const Settings = () => {
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
                     <Input 
                       label="Username"
-                      defaultValue="sakura_design"
+                      defaultValue={displayName}
                     />
                     <Input 
                       label="Email Address"
-                      defaultValue="sakura@example.com"
+                      defaultValue={userEmail}
                       type="email"
                     />
                   </div>
