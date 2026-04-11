@@ -13,6 +13,7 @@ import { CourseHeader, MaterialItem, CourseTasksList, CourseScheduleGrid, useCou
 import CourseCreateForm from '@/components/courses/CourseCreateForm';
 import DeleteConfirmDialog from '@/components/courses/DeleteConfirmDialog';
 import { useCourses } from '@/hooks/useCourses';
+import type { Course } from '@/types';
 
 const formatFileSize = (size?: number): string => {
   if (!size) return 'Unknown size';

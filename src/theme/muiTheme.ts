@@ -25,7 +25,6 @@ const muiTheme = createTheme({
       light: '#9B6AFF',
       dark: '#5B21B6',
       contrastText: '#FFFFFF',
-      shadow: 'rgba(124, 58, 237, 0.25)', // For button shadows
     },
     secondary: {
       main: BRAND_PINK,
@@ -140,7 +139,7 @@ const muiTheme = createTheme({
     '0 4px 20px -2px rgba(0, 0, 0, 0.05)',
     '0 4px 20px -2px rgba(0, 0, 0, 0.05)',
     '0 4px 20px -2px rgba(0, 0, 0, 0.05)',
-    '0 4px 20px -2px rgba(0, 0, 0, 0.05)',
+    '0 4px 20px -2px rgba(0, 0, 0, 0.05)', // Added 25th element
   ],
   components: {
     MuiButton: {
