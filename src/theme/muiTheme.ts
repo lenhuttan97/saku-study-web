@@ -7,6 +7,12 @@ const BRAND_BLUE = '#3B82F6';
 const BG_MAIN = '#FDF8FF';
 const BG_CARD = '#FFFFFF';
 
+// Semantic color definitions
+const SUCCESS_COLOR = '#10B981'; // emerald-500
+const WARNING_COLOR = '#F59E0B'; // amber-500
+const ERROR_COLOR = '#EF4444';   // red-500
+const INFO_COLOR = '#3B82F6';    // blue-500
+
 const muiTheme = createTheme({
   cssVariables: true,
   colorSchemes: {
@@ -19,6 +25,7 @@ const muiTheme = createTheme({
       light: '#9B6AFF',
       dark: '#5B21B6',
       contrastText: '#FFFFFF',
+      shadow: 'rgba(124, 58, 237, 0.25)', // For button shadows
     },
     secondary: {
       main: BRAND_PINK,
@@ -33,6 +40,30 @@ const muiTheme = createTheme({
     text: {
       primary: '#0F172A', // slate-900
       secondary: '#475569', // slate-600
+    },
+    success: {
+      main: SUCCESS_COLOR,
+      light: '#34D399', // emerald-400
+      dark: '#059669',  // emerald-600
+      contrastText: '#FFFFFF',
+    },
+    warning: {
+      main: WARNING_COLOR,
+      light: '#FBBF24', // amber-400
+      dark: '#D97706',  // amber-600
+      contrastText: '#FFFFFF',
+    },
+    error: {
+      main: ERROR_COLOR,
+      light: '#F87171', // red-400
+      dark: '#DC2626',  // red-600
+      contrastText: '#FFFFFF',
+    },
+    info: {
+      main: INFO_COLOR,
+      light: '#60A5FA', // blue-400
+      dark: '#2563EB',  // blue-600
+      contrastText: '#FFFFFF',
     },
   },
   typography: {

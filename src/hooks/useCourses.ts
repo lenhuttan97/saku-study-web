@@ -4,6 +4,29 @@ import { courseService } from '@/services/firebase/courseService';
 
 // Temporary hardcoded user ID - in real app this would come from auth context
 const CURRENT_USER_ID = 'user1'; // This should be replaced with actual user ID from auth
+// Mock data for development
+const mockCourses: Course[] = [
+  {
+    id: '1',
+    userId: 'user1',
+    title: 'Mathematics 101',
+    name: 'Mathematics 101',
+    code: 'MATH101',
+    instructor: 'Dr. Smith',
+    teacher: 'Dr. Smith',
+    credits: 3,
+    color: 'primary', // Maps to theme primary color
+    description: 'Introduction to basic mathematics concepts',
+    location: 'Room A101',
+    progress: 75,
+    schedule: [],
+    materials: [],
+    assignments: [],
+    exams: [],
+    createdAt: new Date(),
+    updatedAt: new Date(),
+  },
+];
 
 export const useCourses = () => {
   const [courses, setCourses] = useState<Course[]>([]);

@@ -50,10 +50,10 @@ const courseConverter: FirestoreDataConverter<Course> = {
       instructor: data.instructor ?? '',
       teacher: data.teacher ?? data.instructor ?? '', // Alias for instructor
       credits: data.credits ?? 0,
-      color: data.color ?? '#7C3AED',
       description: data.description,
       location: data.location,
       progress: data.progress,
+      color: data.color ?? 'primary', // Use theme primary color identifier
       schedule: data.schedule ?? [],
       materials: data.materials ?? [],
       assignments: data.assignments ?? [],
