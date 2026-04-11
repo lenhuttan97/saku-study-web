@@ -9,3 +9,4 @@ export { CourseHeader } from './CourseHeader';
 export { MaterialItem } from './MaterialItem';
 export { CourseTasksList } from './CourseTasksList';
 export { CourseScheduleGrid } from './CourseScheduleGrid';
+export { MaterialsTab } from './MaterialsTab';
