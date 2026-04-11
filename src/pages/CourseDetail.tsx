@@ -10,6 +10,7 @@ import {
 } from 'lucide-react';
 import { Button, Tabs, Card } from '@/components/ui';
 import { CourseHeader, MaterialItem, CourseTasksList, CourseScheduleGrid, useCourseById } from '@/features/courses';
+import { MaterialsTab } from '@/components/courses/MaterialsTab';
 import CourseCreateForm from '@/components/courses/CourseCreateForm';
 import DeleteConfirmDialog from '@/components/courses/DeleteConfirmDialog';
 import { useCourses } from '@/hooks/useCourses';
@@ -116,6 +117,16 @@ const CourseDetail = () => {
       navigate('/courses'); // Navigate back to courses list after deletion
     } catch (err) {
       console.error('Error deleting course:', err);
+    }
+  };
+
+  const handleMaterialsUpdate = async (materials: any) => {
+    if (!course) return;
+
+    try {
+      await updateCourse(course.id, { materials });
+    } catch (err) {
+      console.error('Error updating materials:', err);
     }
   };
 
@@ -248,24 +259,11 @@ const CourseDetail = () => {
                 initial={{ opacity: 0, x: 20 }}
                 animate={{ opacity: 1, x: 0 }}
                 exit={{ opacity: 0, x: -20 }}
-                className="space-y-6"
               >
-                <div className="flex items-center justify-between">
-                  <h3 className="text-xl font-bold text-slate-800">Course Materials</h3>
-                  <Button variant="outline" size="small" startIcon={<Plus size={18} />}>
-                    Upload New
-                  </Button>
-                </div>
-
-                <div className="grid grid-cols-1 gap-4">
-                  {materialItems.length > 0 ? materialItems.map((file, idx) => (
-                    <MaterialItem key={`${file.name}-${idx}`} {...file} />
-                  )) : (
-                    <Card elevation="low" className="text-center text-slate-500 py-8">
-                      No materials yet.
-                    </Card>
-                  )}
-                </div>
+                <MaterialsTab
+                  course={course}
+                  onMaterialsUpdate={handleMaterialsUpdate}
+                />
               </motion.div>
             )}
 
