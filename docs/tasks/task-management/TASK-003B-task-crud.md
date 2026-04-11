@@ -1,7 +1,7 @@
 # TASK-003B: Task CRUD Operations
 
 ## Status
-pending
+done
 
 ## Parent Task
 - **TASK-003**: [Task Management Backend](./TASK-003-task-management.md)
@@ -13,14 +13,14 @@ pending
 Implement task CRUD operations in Firestore.
 
 ## Scope
-- [ ] Create task service
-- [ ] Implement createTask function
-- [ ] Implement getTasks function
-- [ ] Implement updateTask function
-- [ ] Implement updateTaskStatus function
-- [ ] Implement deleteTask function
-- [ ] Connect Tasks page to service
-- [ ] Add real-time listener for tasks
+- [x] Create task service
+- [x] Implement createTask function
+- [x] Implement getTasks function
+- [x] Implement updateTask function
+- [x] Implement updateTaskStatus function
+- [x] Implement deleteTask function
+- [x] Connect Tasks page to service
+- [x] Add real-time listener for tasks
 
 ## Dependencies
 - Task interface (from TASK-003A)
@@ -28,3 +28,10 @@ Implement task CRUD operations in Firestore.
 
 ## Estimated Effort
 1.5 hours
+
+## Implementation Notes
+- Enhanced taskService with updateTaskStatus function
+- Added real-time listeners for tasks
+- Updated Tasks page to use actual service instead of mock data
+- Updated KanbanColumn and TaskCard components to support drag-and-drop for status changes
+- Updated useTasks hook to include real-time updates

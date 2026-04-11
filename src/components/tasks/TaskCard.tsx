@@ -8,6 +8,7 @@ import type { Task, TaskStatus, TaskPriority } from '@/types';
 interface TaskCardProps {
   task: Task;
   onClick?: () => void;
+  onStatusChange?: (taskId: string, newStatus: string) => void;
   onMenuClick?: () => void;
   className?: string;
 }
@@ -21,17 +22,25 @@ const priorityConfig = {
 export function TaskCard({
   task,
   onClick,
+  onStatusChange,
   onMenuClick,
   className,
 }: TaskCardProps) {
   const config = priorityConfig[task.priority];
 
+  // Handle drag start
+  const handleDragStart = (e: React.DragEvent<HTMLDivElement>) => {
+    e.dataTransfer.setData('taskId', task.id);
+  };
+
   return (
     <Card
       hoverable
       elevation="low"
-      className={cn('group p-5', className)}
+      className={cn('group p-5 cursor-move', className)}
       onClick={onClick}
+      draggable
+      onDragStart={handleDragStart}
     >
       <div className="flex items-start justify-between mb-4">
         <Badge label={config.label} color={config.color} size="small" />

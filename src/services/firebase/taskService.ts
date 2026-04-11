@@ -9,8 +9,10 @@ import {
   query,
   where,
   orderBy,
+  onSnapshot,
   type DocumentData,
   type FirestoreDataConverter,
+  type Unsubscribe,
 } from 'firebase/firestore';
 import { db } from '@/services/firebase/config';
 import type { Task } from '@/types/task';
@@ -210,6 +212,36 @@ export const taskService = {
   },
 
   /**
+   * Update task status
+   * @param taskId - The task document ID
+   * @param status - The new status
+   * @returns The updated task
+   */
+  async updateTaskStatus(taskId: string, status: string): Promise<Task> {
+    try {
+      const taskRef = doc(tasksCollection, taskId);
+      const updateData = {
+        status,
+        updatedAt: new Date(),
+        ...(status === 'completed' && { completedAt: new Date() }), // Set completedAt if status is completed
+      };
+
+      await updateDoc(taskRef, updateData);
+
+      // Fetch and return the updated task
+      const updatedDoc = await getDoc(taskRef);
+      if (!updatedDoc.exists()) {
+        throw new Error(`Task ${taskId} not found after status update`);
+      }
+
+      return updatedDoc.data();
+    } catch (error) {
+      console.error(`Failed to update task ${taskId} status:`, error);
+      throw error;
+    }
+  },
+
+  /**
    * Delete a task
    * @param taskId - The task document ID
    * @returns void
@@ -222,6 +254,38 @@ export const taskService = {
       console.error(`Failed to delete task ${taskId}:`, error);
       throw error;
     }
+  },
+
+  // ==================== REAL-TIME LISTENERS ====================
+
+  /**
+   * Listen for real-time changes to tasks for a user
+   * @param userId - The user ID to listen for tasks
+   * @param callback - Function to call when tasks change
+   * @returns Unsubscribe function to stop listening
+   */
+  listenToTasks: (userId: string, callback: (tasks: Task[]) => void): Unsubscribe => {
+    const q = query(tasksCollection, where('userId', '==', userId));
+
+    return onSnapshot(q, (snapshot) => {
+      const tasks = snapshot.docs.map((docSnap) => docSnap.data());
+      callback(tasks);
+    });
+  },
+
+  /**
+   * Listen for real-time changes to a specific task
+   * @param taskId - The task ID to listen for changes
+   * @param callback - Function to call when task changes
+   * @returns Unsubscribe function to stop listening
+   */
+  listenToTask: (taskId: string, callback: (task: Task | null) => void): Unsubscribe => {
+    const taskRef = doc(tasksCollection, taskId);
+
+    return onSnapshot(taskRef, (snapshot) => {
+      const task = snapshot.exists() ? snapshot.data() : null;
+      callback(task);
+    });
   },
 
   // ==================== BATCH OPERATIONS ====================

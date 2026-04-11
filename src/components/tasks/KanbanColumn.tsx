@@ -12,6 +12,7 @@ interface KanbanColumnProps {
   color: string;
   tasks: Task[];
   onTaskClick?: (taskId: string) => void;
+  onTaskStatusChange?: (taskId: string, newStatus: string) => void;
   onMenuClick?: () => void;
   className?: string;
 }
@@ -22,13 +23,31 @@ export function KanbanColumn({
   color,
   tasks,
   onTaskClick,
+  onTaskStatusChange,
   onMenuClick,
   className,
 }: KanbanColumnProps) {
   const filteredTasks = tasks.filter((t) => t.status === status);
 
+  // Handle dropping a task into this column
+  const handleDragOver = (e: React.DragEvent<HTMLDivElement>) => {
+    e.preventDefault();
+  };
+
+  const handleDrop = (e: React.DragEvent<HTMLDivElement>) => {
+    e.preventDefault();
+    const taskId = e.dataTransfer.getData('taskId');
+    if (taskId && onTaskStatusChange) {
+      onTaskStatusChange(taskId, status);
+    }
+  };
+
   return (
-    <div className={cn('space-y-6', className)}>
+    <div
+      className={cn('space-y-6', className)}
+      onDragOver={handleDragOver}
+      onDrop={handleDrop}
+    >
       <div className="flex items-center justify-between px-2">
         <div className="flex items-center gap-3">
           <div className={cn('w-2 h-2 rounded-full', color)}></div>
@@ -50,6 +69,7 @@ export function KanbanColumn({
             key={task.id}
             task={task}
             onClick={() => onTaskClick?.(task.id)}
+            onStatusChange={onTaskStatusChange}
           />
         ))}
 
