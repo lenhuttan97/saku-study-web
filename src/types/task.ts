@@ -18,6 +18,7 @@ export interface Task {
 
 export type TaskStatus = 'todo' | 'in-progress' | 'review' | 'completed' | 'cancelled';
 export type TaskPriority = 'low' | 'medium' | 'high' | 'urgent';
+export type TaskSort = 'dueDate' | 'priority' | 'createdAt' | 'updatedAt'; // Sorting options
 
 export interface TaskCategory {
   id: string;

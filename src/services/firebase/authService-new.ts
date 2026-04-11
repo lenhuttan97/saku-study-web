@@ -7,6 +7,7 @@ import {
   GoogleAuthProvider,
   GithubAuthProvider,
   FacebookAuthProvider,
+  updateProfile,
   User,
   UserCredential,
   Auth
@@ -36,7 +37,7 @@ class AuthService {
     const credential = await createUserWithEmailAndPassword(this.auth, email, password);
     // Optionally update display name
     if (credential.user) {
-      await credential.user.updateProfile({ displayName });
+      await updateProfile(credential.user, { displayName });
     }
     return credential;
   };

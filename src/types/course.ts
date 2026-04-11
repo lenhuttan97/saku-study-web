@@ -4,10 +4,15 @@ export interface Course {
   id: string;
   userId: string; // Reference to the user who owns this course
   title: string;
+  name?: string; // Alias for title for backward compatibility
   code: string;
   instructor: string;
+  teacher?: string; // Alias for instructor for backward compatibility
   credits: number;
   color: string; // Course color for UI
+  description?: string;
+  location?: string; // Location for UI display
+  progress?: number; // Progress percentage for UI
   schedule: CourseSchedule[];
   materials: CourseMaterial[];
   assignments: CourseAssignment[];
@@ -15,6 +20,11 @@ export interface Course {
   createdAt: Date;
   updatedAt: Date;
 }
+
+// Additional course types for UI
+export type CourseProgress = number; // Progress percentage
+export type CourseStatus = 'active' | 'completed' | 'dropped' | 'planned'; // Course status
+export type CourseDifficulty = 'beginner' | 'intermediate' | 'advanced' | 'expert'; // Difficulty level
 
 export interface CourseSchedule {
   id: string;

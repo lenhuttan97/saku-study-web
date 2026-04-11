@@ -13,14 +13,16 @@ export type {
 } from '@/types/task';
 
 // Task-specific view models
-export interface TaskWithCourse extends import('@/types/task').Task {
+import type { Task as BaseTask, TaskStatus as BaseTaskStatus } from '@/types/task';
+
+export interface TaskWithCourse extends BaseTask {
   courseName?: string;
   courseColor?: string;
 }
 
 export interface KanbanColumn {
-  status: import('@/types/task').TaskStatus;
+  status: BaseTaskStatus;
   title: string;
-  tasks: import('@/types/task').Task[];
+  tasks: BaseTask[];
   color: string;
 }

@@ -13,7 +13,9 @@ export type {
 } from '@/types/course';
 
 // Course-specific view models
-export interface CourseWithProgress extends import('@/types/course').Course {
+import type { Course as BaseCourse } from '@/types/course';
+
+export interface CourseWithProgress extends BaseCourse {
   materialsCompleted: number;
   materialsTotal: number;
   nextSession?: {

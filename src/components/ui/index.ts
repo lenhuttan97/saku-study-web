@@ -10,21 +10,21 @@ export { ToggleButtonGroup } from './mui/ToggleButton';
 export { ProgressBar } from './mui/Progress';
 
 // Reusable UI Components
-export { SearchInput } from './reusable/SearchInput';
-export { SocialLoginButtons } from './reusable/SocialLoginButtons';
-export { AuthFormHeader } from './reusable/AuthFormHeader';
-export { ScheduleEvent } from './reusable/ScheduleEvent';
-export { generateTimeSlots, calculateEventPosition, getDayLabels, filterEventsByDay } from './reusable/ScheduleGrid';
+export { SearchInput } from './common/SearchInput';
+export { SocialLoginButtons } from './common/SocialLoginButtons';
+export { AuthFormHeader } from './common/AuthFormHeader';
+export { ScheduleEvent } from './common/ScheduleEvent';
+export { generateTimeSlots, calculateEventPosition, getDayLabels, filterEventsByDay } from './common/ScheduleGrid';
 
 // Dashboard Widgets
-export { ScheduleItem } from './reusable/ScheduleItem';
-export { FocusWidget } from './reusable/FocusWidget';
-export { QuoteCard } from './reusable/QuoteCard';
-export { StreakWidget } from './reusable/StreakWidget';
+export { ScheduleItem } from './common/ScheduleItem';
+export { FocusWidget } from './common/FocusWidget';
+export { QuoteCard } from './common/QuoteCard';
+export { StreakWidget } from './common/StreakWidget';
 
 // Page-specific Components
-export { SettingsSidebar } from './reusable/SettingsSidebar';
+export { SettingsSidebar } from './common/SettingsSidebar';
 
 // CourseDetail Components
-export { CourseHeader } from './reusable/CourseHeader';
-export { MaterialItem } from './reusable/MaterialItem';
+// export { CourseHeader } from './common/CourseHeader';
+// export { MaterialItem } from './common/MaterialItem';

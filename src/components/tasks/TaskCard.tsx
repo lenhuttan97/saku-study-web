@@ -51,7 +51,7 @@ export function TaskCard({
       <h4
         className={cn(
           'font-bold text-slate-800 mb-4 leading-snug',
-          task.status === 'done' && 'line-through text-slate-400'
+          task.status === 'completed' && 'line-through text-slate-400'
         )}
       >
         {task.title}
@@ -60,7 +60,7 @@ export function TaskCard({
       <div className="flex items-center justify-between pt-4 border-t border-slate-50">
         <div className="flex items-center gap-2 text-xs font-bold text-slate-400">
           <Clock size={14} />
-          <span>{task.dueDate}</span>
+          <span>{task.dueDate ? new Date(task.dueDate).toLocaleDateString() : 'No due date'}</span>
         </div>
       </div>
     </Card>

@@ -31,30 +31,30 @@ export const CourseCard = ({ course, idx = 0 }: CourseCardProps) => {
           </div>
 
           <div>
-            <h3 className="text-xl font-bold text-slate-800 group-hover:text-brand-purple transition-colors">{course.name}</h3>
-            <p className="text-slate-500 text-sm mt-1 line-clamp-2">{course.description}</p>
+            <h3 className="text-xl font-bold text-slate-800 group-hover:text-brand-purple transition-colors">{course.name || course.title}</h3>
+            <p className="text-slate-500 text-sm mt-1 line-clamp-2">{course.description || `${course.code} course`}</p>
           </div>
 
           <div className="pt-4 border-t border-slate-50 space-y-3">
             <div className="flex items-center gap-2 text-sm text-slate-600">
               <User size={16} className="text-slate-400" />
-              <span>{course.teacher}</span>
+              <span>{course.teacher || course.instructor}</span>
             </div>
             <div className="flex items-center gap-2 text-sm text-slate-600">
               <MapPin size={16} className="text-slate-400" />
-              <span>{course.location}</span>
+              <span>{course.location || 'TBD'}</span>
             </div>
           </div>
 
           <div className="pt-4">
             <div className="flex justify-between text-xs font-bold text-slate-500 mb-2">
               <span>Progress</span>
-              <span>{course.progress}%</span>
+              <span>{course.progress ?? 0}%</span>
             </div>
             <div className="h-2 bg-slate-100 rounded-full overflow-hidden">
               <motion.div 
                 initial={{ width: 0 }}
-                animate={{ width: `${course.progress}%` }}
+                animate={{ width: `${course.progress ?? 0}%` }}
                 transition={{ duration: 1, delay: 0.5 }}
                 className={cn("h-full rounded-full", course.color.replace('shadow-lg', ''))}
               ></motion.div>

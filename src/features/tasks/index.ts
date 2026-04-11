@@ -8,7 +8,7 @@
  * - types/ - Feature-specific types
  */
 
-// Re-export everything
-export * from './components';
+// Explicit re-exports to avoid naming conflicts
+export { TaskCard, KanbanColumn, TodoItem } from '../../components/tasks';
 export * from './hooks';
-export * from './types';
+export type { Task, TaskStatus, TaskPriority, TaskFilter, TaskSort, TaskWithCourse, KanbanColumn as KanbanColumnType } from './types';

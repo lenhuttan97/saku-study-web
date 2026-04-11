@@ -1,4 +1,6 @@
 // Schedule Feature - Main Entry Point
-export * from './components';
+// Explicit exports to avoid naming conflicts between component and type ScheduleEvent
+export { generateTimeSlots, calculateEventPosition, getDayLabels, filterEventsByDay, ScheduleItem, ScheduleEvent } from '../../components/schedule';
+export type { ScheduleEventType as GridScheduleEvent } from '../../components/schedule';
 export * from './hooks';
-export * from './types';
+export type { ScheduleEvent as CalendarScheduleEvent, EventType, Reminder, CalendarView, TimeSlot } from './types';

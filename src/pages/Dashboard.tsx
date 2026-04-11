@@ -5,6 +5,7 @@ import { Calendar, ChevronRight, Plus, CheckCircle2 } from 'lucide-react';
 import { Button, Card, ProgressBar } from '@/components/ui';
 import { ScheduleItem, FocusWidget, QuoteCard, StreakWidget } from '@/components/ui';
 import { TodoItem } from '@/features/tasks';
+import type { Task } from '@/types';
 
 const Dashboard = () => {
   const container = {
@@ -28,10 +29,49 @@ const Dashboard = () => {
     { time: '02:00 PM', title: 'Study Group: Color Theory', room: 'Library', color: 'bg-brand-blue' },
   ];
 
-  const todoItems = [
-    { task: 'Finish logo sketches', done: true },
-    { task: 'Read Chapter 4: Grid Systems', done: false },
-    { task: 'Upload portfolio draft', done: false },
+  const todoItems: { task: Task; done: boolean }[] = [
+    {
+      task: {
+        id: 'todo-1',
+        userId: 'demo-user',
+        title: 'Finish logo sketches',
+        description: undefined,
+        status: 'completed',
+        priority: 'medium',
+        createdAt: new Date(),
+        updatedAt: new Date(),
+        dueDate: undefined,
+      },
+      done: true,
+    },
+    {
+      task: {
+        id: 'todo-2',
+        userId: 'demo-user',
+        title: 'Read Chapter 4: Grid Systems',
+        description: undefined,
+        status: 'todo',
+        priority: 'medium',
+        createdAt: new Date(),
+        updatedAt: new Date(),
+        dueDate: undefined,
+      },
+      done: false,
+    },
+    {
+      task: {
+        id: 'todo-3',
+        userId: 'demo-user',
+        title: 'Upload portfolio draft',
+        description: undefined,
+        status: 'todo',
+        priority: 'high',
+        createdAt: new Date(),
+        updatedAt: new Date(),
+        dueDate: undefined,
+      },
+      done: false,
+    },
   ];
 
   return (

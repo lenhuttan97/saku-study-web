@@ -9,6 +9,6 @@
  */
 
 // Re-export everything
-export * from './components';
+export * from '../../components/courses';
 export * from './hooks';
 export * from './types';
