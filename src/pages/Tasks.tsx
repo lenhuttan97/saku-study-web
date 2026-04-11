@@ -5,7 +5,7 @@ import {
   Filter,
   Calendar
 } from 'lucide-react';
-import { Button, SearchInput } from '@/components/ui';
+import { Button, SearchInput, LoadingSpinner, LoadingError } from '@/components/ui';
 import { TaskCard } from '@/components/tasks';
 import { useTasks } from '@/hooks/useTasks';
 import type { Task as TaskType, TaskStatus } from '@/types';
@@ -26,7 +26,7 @@ import {
 } from '@dnd-kit/sortable';
 
 const Tasks = () => {
-  const { tasks, loading, error, createTask, updateTaskStatus } = useTasks();
+  const { tasks, loading, error, createTask, updateTaskStatus, refetch } = useTasks();
   const [searchTerm, setSearchTerm] = useState('');
 
   // Filter tasks based on search term
@@ -64,19 +64,20 @@ const Tasks = () => {
 
   if (loading && tasks.length === 0) {
     return (
-      <div className="max-w-7xl mx-auto py-12 text-center">
-        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-brand-purple mx-auto"></div>
-        <p className="mt-4 text-slate-500">Loading tasks...</p>
+      <div className="max-w-7xl mx-auto py-12">
+        <LoadingSpinner text="Loading tasks..." />
       </div>
     );
   }
 
   if (error) {
     return (
-      <div className="max-w-7xl mx-auto py-12 text-center">
-        <h2 className="text-2xl font-bold text-slate-900 mb-2">Failed to load tasks</h2>
-        <p className="text-slate-500 mb-6">{error}</p>
-        <Button onClick={() => window.location.reload()}>Retry</Button>
+      <div className="max-w-7xl mx-auto py-12">
+        <LoadingError
+          title="Failed to load tasks"
+          message={error}
+          onRetry={() => refetch?.()}
+        />
       </div>
     );
   }

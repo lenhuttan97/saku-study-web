@@ -16,6 +16,9 @@ export { AuthFormHeader } from './common/AuthFormHeader';
 export { ScheduleEvent } from './common/ScheduleEvent';
 export { generateTimeSlots, calculateEventPosition, getDayLabels, filterEventsByDay } from './common/ScheduleGrid';
 
+// Loading States
+export { LoadingSpinner, LoadingError } from './common/LoadingSpinner';
+
 // Dashboard Widgets
 export { ScheduleItem } from './common/ScheduleItem';
 export { FocusWidget } from './common/FocusWidget';

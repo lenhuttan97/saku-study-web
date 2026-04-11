@@ -8,7 +8,7 @@ import {
   CheckSquare,
   Plus,
 } from 'lucide-react';
-import { Button, Tabs, Card } from '@/components/ui';
+import { Button, Tabs, Card, LoadingSpinner, LoadingError } from '@/components/ui';
 import { CourseHeader, MaterialItem, CourseTasksList, CourseScheduleGrid, useCourseById } from '@/features/courses';
 import { MaterialsTab } from '@/components/courses/MaterialsTab';
 import CourseCreateForm from '@/components/courses/CourseCreateForm';
@@ -78,47 +78,11 @@ const CourseDetail = () => {
       id: assignmentTasks.length + index + 1,
       title: exam.title,
       status: exam.completed ? 'done' : 'upcoming',
-      dueDate: exam.examDate ? new Date(exam.examDate).toLocaleDateString() : 'No date',
+      dueDate: exam.examDate ? new Date(exam.examDate).toLocaleDateString() : 'No date set',
     }));
 
     return [...assignmentTasks, ...examTasks];
   }, [course]);
-
-  const handleUpdateCourse = async (formData: any) => {
-    if (!course) return;
-
-    try {
-      // Prepare the update data with proper mapping
-      const updateData: Partial<Omit<Course, 'id' | 'userId'>> = {
-        title: formData.name,
-        name: formData.name,
-        code: formData.code,
-        instructor: formData.instructor,
-        teacher: formData.instructor,
-        credits: formData.credits,
-        description: formData.description,
-        location: formData.location,
-        color: formData.color,
-        updatedAt: new Date()
-      };
-
-      await updateCourse(course.id, updateData);
-      setShowEditModal(false);
-    } catch (err) {
-      console.error('Error updating course:', err);
-    }
-  };
-
-  const handleDeleteCourse = async () => {
-    if (!course) return;
-
-    try {
-      await deleteCourse(course.id);
-      navigate('/courses'); // Navigate back to courses list after deletion
-    } catch (err) {
-      console.error('Error deleting course:', err);
-    }
-  };
 
   const handleMaterialsUpdate = async (materials: any) => {
     if (!course) return;
@@ -132,42 +96,46 @@ const CourseDetail = () => {
 
   if (!id) {
     return (
-      <div className="max-w-7xl mx-auto py-12 text-center">
-        <h2 className="text-2xl font-bold text-slate-900 mb-2">Course not found</h2>
-        <p className="text-slate-500 mb-6">Invalid course ID.</p>
-        <Button onClick={() => window.history.back()}>Go Back</Button>
+      <div className="max-w-7xl mx-auto py-12">
+        <LoadingError
+          title="Course not found"
+          message="Invalid course ID."
+          retryText="Go Back"
+          onRetry={() => window.history.back()}
+        />
       </div>
     );
   }
 
   if (loading) {
     return (
-      <div className="max-w-7xl mx-auto space-y-8">
-        <div className="animate-pulse space-y-6">
-          <div className="h-6 w-40 bg-slate-200 rounded" />
-          <div className="h-20 w-full bg-slate-200 rounded-3xl" />
-          <div className="h-[420px] w-full bg-slate-200 rounded-3xl" />
-        </div>
+      <div className="max-w-7xl mx-auto py-12">
+        <LoadingSpinner text="Loading course..." />
       </div>
     );
   }
 
   if (error) {
     return (
-      <div className="max-w-7xl mx-auto py-12 text-center">
-        <h2 className="text-2xl font-bold text-slate-900 mb-2">Failed to load course</h2>
-        <p className="text-slate-500 mb-6">{error}</p>
-        <Button onClick={() => window.location.reload()}>Retry</Button>
+      <div className="max-w-7xl mx-auto py-12">
+        <LoadingError
+          title="Failed to load course"
+          message={error}
+          onRetry={() => window.location.reload()}
+        />
       </div>
     );
   }
 
   if (!course) {
     return (
-      <div className="max-w-7xl mx-auto py-12 text-center">
-        <h2 className="text-2xl font-bold text-slate-900 mb-2">Course not found</h2>
-        <p className="text-slate-500 mb-6">The requested course does not exist.</p>
-        <Button onClick={() => window.history.back()}>Go Back</Button>
+      <div className="max-w-7xl mx-auto py-12">
+        <LoadingError
+          title="Course not found"
+          message="The requested course does not exist."
+          retryText="Go Back"
+          onRetry={() => window.history.back()}
+        />
       </div>
     );
   }
@@ -208,48 +176,73 @@ const CourseDetail = () => {
                     </p>
                   </section>
 
-                  <section className="grid grid-cols-1 sm:grid-cols-2 gap-6">
-                    <Card elevation="low">
-                      <h4 className="font-bold text-slate-800 mb-2">Next Lesson</h4>
-                      <p className="text-slate-500 text-sm mb-4">
-                        {scheduleEvents[0] ? `${scheduleEvents[0].title} at ${scheduleEvents[0].time}` : 'No lesson scheduled yet'}
-                      </p>
-                      <div className="flex items-center gap-2 text-brand-purple font-bold cursor-pointer hover:underline">
-                        <Calendar size={16} />
-                        <span>Add to Calendar</span>
-                      </div>
-                    </Card>
-                    <Card elevation="low">
-                      <h4 className="font-bold text-slate-800 mb-2">Current Progress</h4>
-                      <p className="text-slate-500 text-sm mb-4">
-                        Progress based on course tracking
-                      </p>
-                      <div className="h-2 bg-slate-200 rounded-full overflow-hidden">
-                        <div className="h-full bg-brand-purple rounded-full" style={{ width: `${course.progress ?? 0}%` }} />
-                      </div>
-                    </Card>
+                  <section>
+                    <div className="flex items-center justify-between mb-4">
+                      <h3 className="text-xl font-bold text-slate-800">Progress</h3>
+                      <span className="text-sm font-medium text-slate-500">
+                        {course.progress || 0}% complete
+                      </span>
+                    </div>
+                    <div className="w-full bg-slate-100 rounded-full h-3">
+                      <div
+                        className="bg-brand-purple h-3 rounded-full"
+                        style={{ width: `${course.progress || 0}%` }}
+                      ></div>
+                    </div>
                   </section>
                 </div>
 
-                <div className="space-y-8">
-                  <Card elevation="none" className="bg-brand-purple/5 border border-brand-purple/10">
-                    <h3 className="text-lg font-bold text-slate-800 mb-4">Quick Stats</h3>
-                    <div className="space-y-4">
-                      <div className="flex justify-between items-center">
-                        <span className="text-slate-500">Progress</span>
-                        <span className="font-bold text-slate-800">{course.progress ?? 0}%</span>
+                <div className="space-y-6">
+                  <Card className="p-6">
+                    <h3 className="text-lg font-bold text-slate-800 mb-4">Course Details</h3>
+                    <div className="space-y-3">
+                      <div className="flex justify-between">
+                        <span className="text-slate-500">Credits</span>
+                        <span className="font-medium">{course.credits || 'N/A'}</span>
                       </div>
-                      <div className="flex justify-between items-center">
-                        <span className="text-slate-500">Assignments</span>
-                        <span className="font-bold text-slate-800">{course.assignments.length}</span>
+                      <div className="flex justify-between">
+                        <span className="text-slate-500">Location</span>
+                        <span className="font-medium">{course.location || 'TBD'}</span>
                       </div>
-                      <div className="flex justify-between items-center">
-                        <span className="text-slate-500">Materials</span>
-                        <span className="font-bold text-brand-purple">{course.materials.length}</span>
+                      <div className="flex justify-between">
+                        <span className="text-slate-500">Instructor</span>
+                        <span className="font-medium">{course.teacher || course.instructor || 'Unknown'}</span>
                       </div>
                     </div>
                   </Card>
+
+                  <Card className="p-6">
+                    <h3 className="text-lg font-bold text-slate-800 mb-4">Upcoming Events</h3>
+                    <div className="space-y-3">
+                      {taskItems.slice(0, 3).map((task) => (
+                        <div key={task.id} className="flex items-center justify-between">
+                          <div>
+                            <p className="font-medium text-sm">{task.title}</p>
+                            <p className="text-xs text-slate-500">{task.dueDate}</p>
+                          </div>
+                          <div className={`w-2 h-2 rounded-full ${
+                            task.status === 'done' ? 'bg-emerald-500' :
+                            task.status === 'in-progress' ? 'bg-brand-purple' : 'bg-amber-500'
+                          }`}></div>
+                        </div>
+                      ))}
+                      {taskItems.length === 0 && (
+                        <p className="text-slate-500 text-sm italic">No upcoming events</p>
+                      )}
+                    </div>
+                  </Card>
                 </div>
+              </motion.div>
+            )}
+
+            {activeTab === 'schedule' && (
+              <motion.div
+                key="schedule"
+                initial={{ opacity: 0, x: 20 }}
+                animate={{ opacity: 1, x: 0 }}
+                exit={{ opacity: 0, x: -20 }}
+              >
+                <CourseScheduleGrid events={scheduleEvents} />
               </motion.div>
             )}
 
@@ -277,22 +270,10 @@ const CourseDetail = () => {
                 <CourseTasksList tasks={taskItems} />
               </motion.div>
             )}
-
-            {activeTab === 'schedule' && (
-              <motion.div
-                key="schedule"
-                initial={{ opacity: 0, x: 20 }}
-                animate={{ opacity: 1, x: 0 }}
-                exit={{ opacity: 0, x: -20 }}
-              >
-                <CourseScheduleGrid events={scheduleEvents} />
-              </motion.div>
-            )}
           </AnimatePresence>
         </div>
       </div>
 
-      {/* Edit Course Modal */}
       <AnimatePresence>
         {showEditModal && (
           <motion.div
@@ -309,7 +290,27 @@ const CourseDetail = () => {
             >
               <CourseCreateForm
                 initialData={course}
-                onSubmit={handleUpdateCourse}
+                onSubmit={async (formData) => {
+                  try {
+                    const updateData: Partial<Omit<Course, 'id' | 'userId'>> = {
+                      title: formData.name,
+                      name: formData.name,
+                      code: formData.code,
+                      instructor: formData.instructor,
+                      teacher: formData.instructor,
+                      credits: formData.credits,
+                      description: formData.description,
+                      location: formData.location,
+                      color: formData.color,
+                      updatedAt: new Date()
+                    };
+
+                    await updateCourse(course.id, updateData);
+                    setShowEditModal(false);
+                  } catch (err) {
+                    console.error('Failed to update course:', err);
+                  }
+                }}
                 onCancel={() => setShowEditModal(false)}
               />
             </motion.div>
@@ -317,11 +318,17 @@ const CourseDetail = () => {
         )}
       </AnimatePresence>
 
-      {/* Delete Confirmation Dialog */}
       <DeleteConfirmDialog
         open={showDeleteDialog}
         onClose={() => setShowDeleteDialog(false)}
-        onConfirm={handleDeleteCourse}
+        onConfirm={async () => {
+          try {
+            await deleteCourse(course.id);
+            navigate('/courses');
+          } catch (err) {
+            console.error('Failed to delete course:', err);
+          }
+        }}
         itemName={course.name || course.title}
         itemType="course"
       />
