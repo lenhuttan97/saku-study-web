@@ -74,7 +74,7 @@ export function Button({
       sx={{
         ...variantStyles[variant],
         ...sizeStyles[size],
-        boxShadow: variant === 'primary' ? '0 4px 14px 0 rgba(124, 58, 237, 0.25)' : undefined,
+        boxShadow: variant === 'primary' ? '0 4px 14px 0 var(--mui-palette-primary-shadow)' : undefined,
         fontWeight: 600,
         borderRadius: '12px',
         textTransform: 'none',
