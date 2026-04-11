@@ -3,7 +3,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import { motion } from 'motion/react';
 import { Mail, ChevronRight } from 'lucide-react';
 import { Button, Input, Card, AuthFormHeader } from '@/components/ui';
-import { auth } from '@/firebase/config';
+import { auth } from '@/services/firebase/config';
 import { sendPasswordResetEmail } from 'firebase/auth';
 import { getFirebaseErrorMessage } from '@/utils/firebaseError';
 

@@ -9,7 +9,7 @@ import {
   Plus
 } from 'lucide-react';
 import { Button, Tabs, Card } from '@/components/ui';
-import { CourseHeader, MaterialItem, CourseTasksList, CourseScheduleGrid } from '@/components/ui';
+import { CourseHeader, MaterialItem, CourseTasksList, CourseScheduleGrid } from '@/features/courses';
 
 const CourseDetail = () => {
   const { id } = useParams();

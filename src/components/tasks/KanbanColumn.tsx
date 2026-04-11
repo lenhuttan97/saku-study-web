@@ -4,18 +4,14 @@ import { cn } from '@/lib/utils';
 import { Button } from '@/components/ui';
 import { TaskCard } from './TaskCard';
 
+import type { Task, TaskStatus } from '@/types';
+
 interface KanbanColumnProps {
   title: string;
-  status: string;
+  status: TaskStatus;
   color: string;
-  tasks: Array<{
-    id: number;
-    title: string;
-    status: 'done' | 'in-progress' | 'upcoming';
-    priority: 'high' | 'medium' | 'low';
-    dueDate: string;
-  }>;
-  onTaskClick?: (taskId: number) => void;
+  tasks: Task[];
+  onTaskClick?: (taskId: string) => void;
   onMenuClick?: () => void;
   className?: string;
 }
@@ -52,10 +48,7 @@ export function KanbanColumn({
         {filteredTasks.map((task) => (
           <TaskCard
             key={task.id}
-            title={task.title}
-            status={task.status}
-            priority={task.priority}
-            dueDate={task.dueDate}
+            task={task}
             onClick={() => onTaskClick?.(task.id)}
           />
         ))}

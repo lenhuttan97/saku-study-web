@@ -56,6 +56,14 @@ Main documentation for the Sanctuary academic planner application.
 ### Tasks
 - [Tasks Index](./tasks/INDEX.md)
 
+## Design Documents
+
+| Document | Description |
+|----------|-------------|
+| [Architecture Refactor Plan](./design/architecture-refactor-plan.md) | Phased plan to migrate to feature-based architecture |
+| [Project Analysis](./reports/project-analysis.md) | Full project analysis - tech stack, architecture, gaps |
+| [Design Mockup Analysis](./reports/design-mockup-analysis.md) | Design system specs, screens, and patterns from mockups |
+
 ## Reports
 
 | Report | Description |

@@ -9,7 +9,7 @@ import {
   FacebookAuthProvider,
   type User 
 } from 'firebase/auth';
-import { auth } from '@/firebase/config';
+import { auth } from '@/services/firebase/config';
 
 interface AuthContextValue {
   user: User | null;

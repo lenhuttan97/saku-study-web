@@ -3,6 +3,9 @@ import { Clock } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { Card, Button } from '@/components/ui';
 
+import type { Task } from '@/types';
+import { useTasks } from '@/hooks/useTasks';
+
 interface CourseTask {
   id: number;
   title: string;

@@ -5,29 +5,73 @@ import {
   Filter, 
   Calendar
 } from 'lucide-react';
-import { Button, SearchInput, KanbanColumn } from '@/components/ui';
-
-interface Task {
-  id: number;
-  title: string;
-  status: 'done' | 'in-progress' | 'upcoming';
-  priority: 'high' | 'medium' | 'low';
-  dueDate: string;
-}
+import { Button, SearchInput } from '@/components/ui';
+import { KanbanColumn } from '@/features/tasks';
+import type { Task as TaskType, TaskStatus } from '@/types';
 
 const Tasks = () => {
-  const [tasks, setTasks] = useState<Task[]>([
-    { id: 1, title: 'Finish logo sketches', status: 'done', priority: 'high', dueDate: 'Today' },
-    { id: 2, title: 'Read Chapter 4: Grid Systems', status: 'in-progress', priority: 'medium', dueDate: 'Tomorrow' },
-    { id: 3, title: 'Upload portfolio draft', status: 'upcoming', priority: 'high', dueDate: 'Apr 10' },
-    { id: 4, title: 'Color Palette Selection', status: 'in-progress', priority: 'low', dueDate: 'Apr 12' },
-    { id: 5, title: 'Typography Research', status: 'upcoming', priority: 'medium', dueDate: 'Apr 15' },
+  const [tasks, setTasks] = useState<TaskType[]>([
+    { 
+      id: '1', 
+      userId: 'demo-user',
+      title: 'Finish logo sketches', 
+      status: 'completed', 
+      priority: 'high', 
+      dueDate: new Date(),
+      createdAt: new Date(),
+      updatedAt: new Date(),
+      description: 'Complete the logo sketches for client review',
+    },
+    { 
+      id: '2', 
+      userId: 'demo-user',
+      title: 'Read Chapter 4: Grid Systems', 
+      status: 'in-progress', 
+      priority: 'medium', 
+      dueDate: new Date(Date.now() + 86400000), // Tomorrow
+      createdAt: new Date(),
+      updatedAt: new Date(),
+      description: 'Read and take notes on grid systems chapter',
+    },
+    { 
+      id: '3', 
+      userId: 'demo-user',
+      title: 'Upload portfolio draft', 
+      status: 'todo', 
+      priority: 'high', 
+      dueDate: new Date(Date.now() + 4 * 86400000), // 4 days from now
+      createdAt: new Date(),
+      updatedAt: new Date(),
+      description: 'Upload the latest portfolio draft for review',
+    },
+    { 
+      id: '4', 
+      userId: 'demo-user',
+      title: 'Color Palette Selection', 
+      status: 'in-progress', 
+      priority: 'low', 
+      dueDate: new Date(Date.now() + 6 * 86400000), // 6 days from now
+      createdAt: new Date(),
+      updatedAt: new Date(),
+      description: 'Select color palette for new project',
+    },
+    { 
+      id: '5', 
+      userId: 'demo-user',
+      title: 'Typography Research', 
+      status: 'todo', 
+      priority: 'medium', 
+      dueDate: new Date(Date.now() + 9 * 86400000), // 9 days from now
+      createdAt: new Date(),
+      updatedAt: new Date(),
+      description: 'Research typography options for brand identity',
+    },
   ]);
 
-  const columns = [
-    { id: 'upcoming', label: 'Upcoming', color: 'bg-slate-400' },
+  const columns: { id: TaskStatus; label: string; color: string }[] = [
+    { id: 'todo', label: 'To Do', color: 'bg-slate-400' },
     { id: 'in-progress', label: 'In Progress', color: 'bg-brand-purple' },
-    { id: 'done', label: 'Completed', color: 'bg-emerald-500' },
+    { id: 'completed', label: 'Completed', color: 'bg-emerald-500' },
   ];
 
   return (

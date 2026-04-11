@@ -3,11 +3,10 @@ import { Clock, MoreVertical } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { Badge, Button, Card } from '@/components/ui';
 
+import type { Task, TaskStatus, TaskPriority } from '@/types';
+
 interface TaskCardProps {
-  title: string;
-  status: 'done' | 'in-progress' | 'upcoming';
-  priority: 'high' | 'medium' | 'low';
-  dueDate: string;
+  task: Task;
   onClick?: () => void;
   onMenuClick?: () => void;
   className?: string;
@@ -20,15 +19,12 @@ const priorityConfig = {
 };
 
 export function TaskCard({
-  title,
-  status,
-  priority,
-  dueDate,
+  task,
   onClick,
   onMenuClick,
   className,
 }: TaskCardProps) {
-  const config = priorityConfig[priority];
+  const config = priorityConfig[task.priority];
 
   return (
     <Card
@@ -43,7 +39,10 @@ export function TaskCard({
           variant="ghost"
           size="small"
           className="opacity-0 group-hover:opacity-100 p-1"
-          onClick={onMenuClick}
+          onClick={(e) => {
+            e.stopPropagation();
+            onMenuClick?.();
+          }}
         >
           <MoreVertical size={16} />
         </Button>
@@ -52,16 +51,16 @@ export function TaskCard({
       <h4
         className={cn(
           'font-bold text-slate-800 mb-4 leading-snug',
-          status === 'done' && 'line-through text-slate-400'
+          task.status === 'completed' && 'line-through text-slate-400'
         )}
       >
-        {title}
+        {task.title}
       </h4>
 
       <div className="flex items-center justify-between pt-4 border-t border-slate-50">
         <div className="flex items-center gap-2 text-xs font-bold text-slate-400">
           <Clock size={14} />
-          <span>{dueDate}</span>
+          <span>{task.dueDate ? new Date(task.dueDate).toLocaleDateString() : 'No due date'}</span>
         </div>
       </div>
     </Card>

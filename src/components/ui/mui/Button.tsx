@@ -14,7 +14,7 @@ interface ButtonProps {
   endIcon?: React.ReactNode;
   fullWidth?: boolean;
   disabled?: boolean;
-  onClick?: () => void;
+  onClick?: (event: React.MouseEvent<HTMLButtonElement>) => void;
   type?: 'button' | 'submit' | 'reset';
 }
 
