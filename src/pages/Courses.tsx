@@ -41,7 +41,7 @@ const Courses = () => {
         location: formData.location,
         description: formData.description,
         progress: 0, // Default progress
-        color: 'bg-brand-purple shadow-brand-purple/20', // Default color
+        color: 'primary', // Maps to theme primary color
         schedule: [],
         materials: [],
         assignments: [],
