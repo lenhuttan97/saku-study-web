@@ -1,7 +1,7 @@
 # TASK-003C: Drag and Drop Functionality
 
 ## Status
-pending
+done
 
 ## Parent Task
 - **TASK-003**: [Task Management Backend](./TASK-003-task-management.md)
@@ -13,14 +13,14 @@ pending
 Implement drag-and-drop functionality for task Kanban board.
 
 ## Scope
-- [ ] Install @dnd-kit/core and @dnd-kit/sortable
-- [ ] Set up DndContext in Tasks page
-- [ ] Implement draggable TaskCard components
-- [ ] Implement droppable KanbanColumn components
-- [ ] Handle onDragEnd event
-- [ ] Update task status on drop
-- [ ] Add visual feedback during drag
-- [ ] Handle edge cases (drop outside columns)
+- [x] Install @dnd-kit/core and @dnd-kit/sortable
+- [x] Set up DndContext in Tasks page
+- [x] Implement draggable TaskCard components
+- [x] Implement droppable KanbanColumn components
+- [x] Handle onDragEnd event
+- [x] Update task status on drop
+- [x] Add visual feedback during drag
+- [x] Handle edge cases (drop outside columns)
 
 ## Dependencies
 - @dnd-kit/core
@@ -29,3 +29,11 @@ Implement drag-and-drop functionality for task Kanban board.
 
 ## Estimated Effort
 2 hours
+
+## Implementation Notes
+- Installed @dnd-kit/core and @dnd-kit/sortable packages
+- Updated TaskCard component to use useSortable hook for drag functionality
+- Updated Tasks page to use DndContext for overall drag-and-drop handling
+- Implemented onDragEnd handler to update task status when moved between columns
+- Added visual feedback during drag operations
+- Ensured proper cleanup and error handling
