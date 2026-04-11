@@ -1,5 +1,5 @@
 import React, { useMemo, useState } from 'react';
-import { useParams } from 'react-router-dom';
+import { useParams, useNavigate } from 'react-router-dom';
 import { motion, AnimatePresence } from 'motion/react';
 import {
   Info,
@@ -10,6 +10,10 @@ import {
 } from 'lucide-react';
 import { Button, Tabs, Card } from '@/components/ui';
 import { CourseHeader, MaterialItem, CourseTasksList, CourseScheduleGrid, useCourseById } from '@/features/courses';
+import CourseCreateForm from '@/components/courses/CourseCreateForm';
+import DeleteConfirmDialog from '@/components/courses/DeleteConfirmDialog';
+import { useCourses } from '@/hooks/useCourses';
+import type { Course } from '@/types';
 
 const formatFileSize = (size?: number): string => {
   if (!size) return 'Unknown size';
@@ -20,7 +24,12 @@ const formatFileSize = (size?: number): string => {
 
 const CourseDetail = () => {
   const { id } = useParams<{ id: string }>();
+  const navigate = useNavigate();
   const [activeTab, setActiveTab] = useState('info');
+  const [showEditModal, setShowEditModal] = useState(false);
+  const [showDeleteDialog, setShowDeleteDialog] = useState(false);
+  const { course, loading, error } = useCourseById(id ?? '');
+  const { updateCourse, deleteCourse } = useCourses();
 
   const tabs = [
     { id: 'info', label: 'Info', icon: <Info size={18} /> },
@@ -28,9 +37,6 @@ const CourseDetail = () => {
     { id: 'materials', label: 'Materials', icon: <FileText size={18} /> },
     { id: 'tasks', label: 'Tasks', icon: <CheckSquare size={18} /> },
   ];
-
-  const safeCourseId = id ?? '';
-  const { course, loading, error } = useCourseById(safeCourseId);
 
   const scheduleEvents = useMemo(() => {
     if (!course) return [];
@@ -76,6 +82,42 @@ const CourseDetail = () => {
 
     return [...assignmentTasks, ...examTasks];
   }, [course]);
+
+  const handleUpdateCourse = async (formData: any) => {
+    if (!course) return;
+
+    try {
+      // Prepare the update data with proper mapping
+      const updateData: Partial<Omit<Course, 'id' | 'userId'>> = {
+        title: formData.name,
+        name: formData.name,
+        code: formData.code,
+        instructor: formData.instructor,
+        teacher: formData.instructor,
+        credits: formData.credits,
+        description: formData.description,
+        location: formData.location,
+        color: formData.color,
+        updatedAt: new Date()
+      };
+
+      await updateCourse(course.id, updateData);
+      setShowEditModal(false);
+    } catch (err) {
+      console.error('Error updating course:', err);
+    }
+  };
+
+  const handleDeleteCourse = async () => {
+    if (!course) return;
+
+    try {
+      await deleteCourse(course.id);
+      navigate('/courses'); // Navigate back to courses list after deletion
+    } catch (err) {
+      console.error('Error deleting course:', err);
+    }
+  };
 
   if (!id) {
     return (
@@ -127,6 +169,7 @@ const CourseDetail = () => {
         location={course.location || 'TBD'}
         semester={course.code || 'Current term'}
         color={course.color || 'bg-brand-purple'}
+        onEditClick={() => setShowEditModal(true)}
       />
 
       <div className="bg-white rounded-3xl border border-slate-100 card-shadow overflow-hidden">
@@ -250,6 +293,40 @@ const CourseDetail = () => {
           </AnimatePresence>
         </div>
       </div>
+
+      {/* Edit Course Modal */}
+      <AnimatePresence>
+        {showEditModal && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="fixed inset-0 bg-black/50 flex items-center justify-center p-4 z-50"
+          >
+            <motion.div
+              initial={{ scale: 0.95, y: 20 }}
+              animate={{ scale: 1, y: 0 }}
+              exit={{ scale: 0.95, y: 20 }}
+              className="w-full max-w-2xl max-h-[90vh] overflow-y-auto"
+            >
+              <CourseCreateForm
+                initialData={course}
+                onSubmit={handleUpdateCourse}
+                onCancel={() => setShowEditModal(false)}
+              />
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
+      {/* Delete Confirmation Dialog */}
+      <DeleteConfirmDialog
+        open={showDeleteDialog}
+        onClose={() => setShowDeleteDialog(false)}
+        onConfirm={handleDeleteCourse}
+        itemName={course.name || course.title}
+        itemType="course"
+      />
     </div>
   );
 };

@@ -64,19 +64,19 @@ export const useCourses = () => {
     try {
       setLoading(true);
       setError(null);
-      
+
       // Add the current user ID to the course data
       const courseWithUser: Omit<Course, 'id'> = {
         ...courseData,
         userId: CURRENT_USER_ID,
       };
-      
+
       // Create the course via service
       const newCourse = await courseService.createCourse(courseWithUser);
-      
+
       // Add the new course to the local state
       setCourses(prev => [...prev, newCourse]);
-      
+
       return newCourse;
     } catch (err) {
       console.error('Error creating course:', err);
@@ -96,6 +96,68 @@ export const useCourses = () => {
     }
   };
 
+  // Update an existing course and refresh the list
+  const updateCourse = async (courseId: string, updates: Partial<Omit<Course, 'id' | 'userId'>>) => {
+    try {
+      setLoading(true);
+      setError(null);
+
+      // Update the course via service
+      const updatedCourse = await courseService.updateCourse(courseId, updates);
+
+      // Update the course in the local state
+      setCourses(prev => prev.map(course =>
+        course.id === courseId ? updatedCourse : course
+      ));
+
+      return updatedCourse;
+    } catch (err) {
+      console.error('Error updating course:', err);
+      if (err && typeof err === 'object' && 'message' in err) {
+        const errorMessage = err.message as string;
+        if (errorMessage.includes('Missing or insufficient permissions')) {
+          setError('Firebase permissions not configured. Course not updated.');
+        } else {
+          setError(errorMessage);
+        }
+      } else {
+        setError('Failed to update course. Please check your Firebase configuration.');
+      }
+      throw err;
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  // Delete a course and refresh the list
+  const deleteCourse = async (courseId: string) => {
+    try {
+      setLoading(true);
+      setError(null);
+
+      // Delete the course via service
+      await courseService.deleteCourse(courseId);
+
+      // Remove the course from the local state
+      setCourses(prev => prev.filter(course => course.id !== courseId));
+    } catch (err) {
+      console.error('Error deleting course:', err);
+      if (err && typeof err === 'object' && 'message' in err) {
+        const errorMessage = err.message as string;
+        if (errorMessage.includes('Missing or insufficient permissions')) {
+          setError('Firebase permissions not configured. Course not deleted.');
+        } else {
+          setError(errorMessage);
+        }
+      } else {
+        setError('Failed to delete course. Please check your Firebase configuration.');
+      }
+      throw err;
+    } finally {
+      setLoading(false);
+    }
+  };
+
   const refetch = () => {
     fetchCourses();
   };
@@ -104,7 +166,7 @@ export const useCourses = () => {
     fetchCourses();
   }, []);
 
-  return { courses, loading, error, refetch, createCourse };
+  return { courses, loading, error, refetch, createCourse, updateCourse, deleteCourse };
 };
 
 export const useCourseById = (id: string) => {
@@ -146,6 +208,6 @@ export const useCourseById = (id: string) => {
 
 export const useCourseMaterials = (courseId: string) => {
   const { course, loading, error } = useCourseById(courseId);
-  
+
   return { materials: course?.materials || [], loading, error };
 };
