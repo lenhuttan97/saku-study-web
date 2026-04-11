@@ -16,7 +16,7 @@ export interface Task {
   reminder?: Date;
 }
 
-export type TaskStatus = 'todo' | 'in-progress' | 'review' | 'completed' | 'cancelled';
+export type TaskStatus = 'upcoming' | 'in-progress' | 'done' | 'todo' | 'review' | 'completed' | 'cancelled';
 export type TaskPriority = 'low' | 'medium' | 'high' | 'urgent';
 export type TaskSort = 'dueDate' | 'priority' | 'createdAt' | 'updatedAt'; // Sorting options
 
