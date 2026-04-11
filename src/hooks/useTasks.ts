@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { taskService } from '@/services/firebase/taskService';
 import type { Task } from '@/types';
 
@@ -9,6 +9,7 @@ export const useTasks = () => {
   const [tasks, setTasks] = useState<Task[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const unsubscribeRef = useRef<(() => void) | null>(null);
 
   const refetch = async () => {
     try {
@@ -35,8 +36,25 @@ export const useTasks = () => {
     }
   };
 
+  // Set up real-time listener
   useEffect(() => {
-    refetch();
+    // Unsubscribe from previous listener if exists
+    if (unsubscribeRef.current) {
+      unsubscribeRef.current();
+    }
+
+    // Set up new real-time listener
+    unsubscribeRef.current = taskService.listenToTasks(CURRENT_USER_ID, (updatedTasks) => {
+      setTasks(updatedTasks);
+    });
+
+    // Cleanup function
+    return () => {
+      if (unsubscribeRef.current) {
+        unsubscribeRef.current();
+        unsubscribeRef.current = null;
+      }
+    };
   }, []);
 
   const createTask = async (taskData: Omit<Task, 'id' | 'userId' | 'createdAt' | 'updatedAt'>) => {
@@ -52,7 +70,7 @@ export const useTasks = () => {
       };
 
       const newTask = await taskService.createTask(taskWithUser);
-      setTasks(prev => [...prev, newTask]);
+      // Real-time listener will update the state automatically
       return newTask;
     } catch (err) {
       console.error('Error creating task:', err);
@@ -78,7 +96,7 @@ export const useTasks = () => {
       setError(null);
 
       const updatedTask = await taskService.updateTask(taskId, updates);
-      setTasks(prev => prev.map(task => task.id === taskId ? updatedTask : task));
+      // Real-time listener will update the state automatically
       return updatedTask;
     } catch (err) {
       console.error('Error updating task:', err);
@@ -98,13 +116,39 @@ export const useTasks = () => {
     }
   };
 
+  const updateTaskStatus = async (taskId: string, status: string) => {
+    try {
+      setLoading(true);
+      setError(null);
+
+      const updatedTask = await taskService.updateTaskStatus(taskId, status);
+      // Real-time listener will update the state automatically
+      return updatedTask;
+    } catch (err) {
+      console.error('Error updating task status:', err);
+      if (err && typeof err === 'object' && 'message' in err) {
+        const errorMessage = err.message as string;
+        if (errorMessage.includes('Missing or insufficient permissions')) {
+          setError('Firebase permissions not configured. Task status not updated.');
+        } else {
+          setError(errorMessage);
+        }
+      } else {
+        setError('Failed to update task status. Please check your Firebase configuration.');
+      }
+      throw err;
+    } finally {
+      setLoading(false);
+    }
+  };
+
   const deleteTask = async (taskId: string) => {
     try {
       setLoading(true);
       setError(null);
 
       await taskService.deleteTask(taskId);
-      setTasks(prev => prev.filter(task => task.id !== taskId));
+      // Real-time listener will update the state automatically
     } catch (err) {
       console.error('Error deleting task:', err);
       if (err && typeof err === 'object' && 'message' in err) {
@@ -130,12 +174,13 @@ export const useTasks = () => {
     refetch,
     createTask,
     updateTask,
+    updateTaskStatus,
     deleteTask
   };
 };
 
 export const useTasksByStatus = (status: string) => {
-  const { tasks, loading, error, refetch, createTask, updateTask, deleteTask } = useTasks();
+  const { tasks, loading, error, refetch, createTask, updateTask, updateTaskStatus, deleteTask } = useTasks();
   const filteredTasks = tasks.filter(task => task.status === status);
 
   return {
@@ -145,6 +190,7 @@ export const useTasksByStatus = (status: string) => {
     refetch,
     createTask,
     updateTask,
+    updateTaskStatus,
     deleteTask
   };
 };
@@ -153,35 +199,28 @@ export const useTaskById = (id: string) => {
   const [task, setTask] = useState<Task | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const unsubscribeRef = useRef<(() => void) | null>(null);
 
   useEffect(() => {
-    const fetchTask = async () => {
-      try {
-        setLoading(true);
-        const fetchedTask = await taskService.fetchTaskById(id);
-        setTask(fetchedTask);
-        setError(null);
-      } catch (err) {
-        console.error('Error fetching task by ID:', err);
-        // Handle Firebase permission errors gracefully
-        if (err && typeof err === 'object' && 'message' in err) {
-          const errorMessage = err.message as string;
-          if (errorMessage.includes('Missing or insufficient permissions')) {
-            setError('Firebase permissions not configured. Task not found.');
-          } else {
-            setError(errorMessage);
-          }
-        } else {
-          setError('Failed to fetch task. Please check your Firebase configuration.');
-        }
-      } finally {
-        setLoading(false);
+    // Unsubscribe from previous listener if exists
+    if (unsubscribeRef.current) {
+      unsubscribeRef.current();
+    }
+
+    // Set up new real-time listener for specific task
+    unsubscribeRef.current = taskService.listenToTask(id, (fetchedTask) => {
+      setTask(fetchedTask);
+      setError(null);
+      setLoading(false);
+    });
+
+    // Cleanup function
+    return () => {
+      if (unsubscribeRef.current) {
+        unsubscribeRef.current();
+        unsubscribeRef.current = null;
       }
     };
-
-    if (id) {
-      fetchTask();
-    }
   }, [id]);
 
   return { task, loading, error };
