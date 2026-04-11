@@ -1,20 +1,54 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { motion } from 'motion/react';
 import { Link } from 'react-router-dom';
-import { BookOpen, MapPin, User, MoreVertical } from 'lucide-react';
+import { BookOpen, MapPin, User, MoreVertical, Edit3, Trash2 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { Card } from '@/components/ui';
 import { useTheme } from '@mui/material/styles';
+import {
+  IconButton,
+  Menu,
+  MenuItem,
+  ListItemIcon,
+  ListItemText
+} from '@mui/material';
 
 import type { Course } from '@/types';
 
 interface CourseCardProps {
   course: Course;
   idx?: number;
+  onEditClick?: (course: Course) => void; // New prop for edit functionality
+  onDeleteClick?: (course: Course) => void; // New prop for delete functionality
 }
 
-export const CourseCard = ({ course, idx = 0 }: CourseCardProps) => {
+export const CourseCard = ({ course, idx = 0, onEditClick, onDeleteClick }: CourseCardProps) => {
   const theme = useTheme();
+  const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
+  const open = Boolean(anchorEl);
+
+  const handleClick = (event: React.MouseEvent<HTMLElement>) => {
+    event.stopPropagation();
+    setAnchorEl(event.currentTarget);
+  };
+
+  const handleClose = () => {
+    setAnchorEl(null);
+  };
+
+  const handleEdit = () => {
+    handleClose();
+    if (onEditClick) {
+      onEditClick(course);
+    }
+  };
+
+  const handleDelete = () => {
+    handleClose();
+    if (onDeleteClick) {
+      onDeleteClick(course);
+    }
+  };
 
   // Map color identifier to actual hex color from theme
   const getColorFromTheme = (colorIdentifier: string) => {
@@ -43,7 +77,7 @@ export const CourseCard = ({ course, idx = 0 }: CourseCardProps) => {
 
   const actualColor = getColorFromTheme(course.color);
   return (
-    <motion.div 
+    <motion.div
       initial={{ opacity: 0, scale: 0.95 }}
       animate={{ opacity: 1, scale: 1 }}
       transition={{ delay: idx * 0.1 }}
@@ -57,9 +91,16 @@ export const CourseCard = ({ course, idx = 0 }: CourseCardProps) => {
             >
               <BookOpen size={24} />
             </div>
-            <button className="p-2 text-slate-300 hover:text-slate-600 transition-colors">
+            <IconButton
+              onClick={handleClick}
+              className="p-2 text-slate-300 hover:text-slate-600 transition-colors"
+              aria-label="course options"
+              aria-controls={open ? 'course-menu' : undefined}
+              aria-haspopup="true"
+              aria-expanded={open ? 'true' : undefined}
+            >
               <MoreVertical size={20} />
-            </button>
+            </IconButton>
           </div>
 
           <div>
@@ -94,6 +135,38 @@ export const CourseCard = ({ course, idx = 0 }: CourseCardProps) => {
             </div>
           </div>
         </Link>
+
+        {/* Options Menu */}
+        <Menu
+          id="course-menu"
+          anchorEl={anchorEl}
+          open={open}
+          onClose={handleClose}
+          onClick={(e) => e.stopPropagation()}
+          PaperProps={{
+            elevation: 3,
+            style: {
+              transform: 'translateY(10px)',
+            },
+          }}
+          MenuListProps={{
+            'aria-labelledby': 'basic-button',
+          }}
+          disableScrollLock
+        >
+          <MenuItem onClick={handleEdit}>
+            <ListItemIcon>
+              <Edit3 fontSize="small" />
+            </ListItemIcon>
+            <ListItemText>Edit Course</ListItemText>
+          </MenuItem>
+          <MenuItem onClick={handleDelete}>
+            <ListItemIcon>
+              <Trash2 fontSize="small" />
+            </ListItemIcon>
+            <ListItemText>Delete Course</ListItemText>
+          </MenuItem>
+        </Menu>
       </Card>
     </motion.div>
   );
