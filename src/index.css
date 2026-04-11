@@ -4,12 +4,18 @@
 @theme {
   --font-sans: "Plus Jakarta Sans", "Be Vietnam Pro", ui-sans-serif, system-ui, sans-serif;
   --font-display: "Plus Jakarta Sans", sans-serif;
-  
+
   --color-brand-purple: #7C3AED;
   --color-brand-pink: #EC4899;
   --color-brand-blue: #3B82F6;
   --color-bg-main: #FDF8FF;
   --color-bg-card: #FFFFFF;
+
+  /* Semantic color tokens for consistency */
+  --color-success: #10B981; /* emerald-500 */
+  --color-warning: #F59E0B; /* amber-500 */
+  --color-error: #EF4444;   /* red-500 */
+  --color-info: #3B82F6;    /* blue-500 */
 }
 
 @layer base {
