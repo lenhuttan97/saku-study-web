@@ -2,6 +2,8 @@ import React from 'react';
 import { Clock, MoreVertical } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { Badge, Button, Card } from '@/components/ui';
+import { useSortable } from '@dnd-kit/sortable';
+import { CSS } from '@dnd-kit/utilities';
 
 import type { Task, TaskStatus, TaskPriority } from '@/types';
 
@@ -26,21 +28,32 @@ export function TaskCard({
   onMenuClick,
   className,
 }: TaskCardProps) {
+  const {
+    attributes,
+    listeners,
+    setNodeRef,
+    transform,
+    transition,
+    isDragging,
+  } = useSortable({ id: task.id });
+
   const config = priorityConfig[task.priority];
 
-  // Handle drag start
-  const handleDragStart = (e: React.DragEvent<HTMLDivElement>) => {
-    e.dataTransfer.setData('taskId', task.id);
+  const style = {
+    transform: CSS.Transform.toString(transform),
+    transition,
+    opacity: isDragging ? 0.5 : 1,
   };
 
   return (
     <Card
+      ref={setNodeRef}
+      style={style}
       hoverable
       elevation="low"
       className={cn('group p-5 cursor-move', className)}
       onClick={onClick}
-      draggable
-      onDragStart={handleDragStart}
+      {...attributes}
     >
       <div className="flex items-start justify-between mb-4">
         <Badge label={config.label} color={config.color} size="small" />
