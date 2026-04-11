@@ -4,6 +4,7 @@ import { Link } from 'react-router-dom';
 import { BookOpen, MapPin, User, MoreVertical } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { Card } from '@/components/ui';
+import { useTheme } from '@mui/material/styles';
 
 import type { Course } from '@/types';
 
@@ -13,6 +14,34 @@ interface CourseCardProps {
 }
 
 export const CourseCard = ({ course, idx = 0 }: CourseCardProps) => {
+  const theme = useTheme();
+
+  // Map color identifier to actual hex color from theme
+  const getColorFromTheme = (colorIdentifier: string) => {
+    switch (colorIdentifier) {
+      case 'primary':
+        return theme.palette.primary.main;
+      case 'secondary':
+        return theme.palette.secondary.main;
+      case 'success':
+        return theme.palette.success.main;
+      case 'warning':
+        return theme.palette.warning.main;
+      case 'error':
+        return theme.palette.error.main;
+      case 'info':
+        return theme.palette.info.main;
+      default:
+        // If it's already a hex value, return as is
+        if (colorIdentifier.startsWith('#')) {
+          return colorIdentifier;
+        }
+        // Default to primary if unknown identifier
+        return theme.palette.primary.main;
+    }
+  };
+
+  const actualColor = getColorFromTheme(course.color);
   return (
     <motion.div 
       initial={{ opacity: 0, scale: 0.95 }}
@@ -22,7 +51,10 @@ export const CourseCard = ({ course, idx = 0 }: CourseCardProps) => {
       <Card hoverable elevation="medium" className="p-6">
         <Link to={`/courses/${course.id}`} className="block space-y-4">
           <div className="flex items-start justify-between">
-            <div className={cn("w-14 h-14 rounded-2xl flex items-center justify-center text-white shadow-lg", course.color)}>
+            <div
+              className="w-14 h-14 rounded-2xl flex items-center justify-center text-white shadow-lg"
+              style={{ backgroundColor: actualColor }}
+            >
               <BookOpen size={24} />
             </div>
             <button className="p-2 text-slate-300 hover:text-slate-600 transition-colors">
@@ -52,11 +84,12 @@ export const CourseCard = ({ course, idx = 0 }: CourseCardProps) => {
               <span>{course.progress ?? 0}%</span>
             </div>
             <div className="h-2 bg-slate-100 rounded-full overflow-hidden">
-              <motion.div 
+              <motion.div
                 initial={{ width: 0 }}
                 animate={{ width: `${course.progress ?? 0}%` }}
                 transition={{ duration: 1, delay: 0.5 }}
-                className={cn("h-full rounded-full", course.color.replace('shadow-lg', ''))}
+                className="h-full rounded-full"
+                style={{ backgroundColor: actualColor }}
               ></motion.div>
             </div>
           </div>

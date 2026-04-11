@@ -12,7 +12,7 @@ const mockCourses: Course[] = [
     instructor: 'Dr. Smith',
     teacher: 'Dr. Smith',
     credits: 3,
-    color: 'bg-purple-500',
+    color: 'primary', // Maps to theme primary color
     description: 'Introduction to basic mathematics concepts',
     location: 'Room A101',
     progress: 75,

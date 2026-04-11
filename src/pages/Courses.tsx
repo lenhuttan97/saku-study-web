@@ -19,7 +19,7 @@ const Courses = () => {
       location: 'Room 402', 
       description: 'Introduction to visual communication and design principles.',
       progress: 65, 
-      color: 'bg-brand-purple shadow-brand-purple/20',
+      color: 'primary', // Maps to theme primary
       schedule: [],
       materials: [],
       assignments: [],
@@ -39,7 +39,7 @@ const Courses = () => {
       location: 'Lab 301', 
       description: 'Deep dive into modern web technologies and frameworks.',
       progress: 30, 
-      color: 'bg-brand-pink shadow-brand-pink/20',
+      color: 'secondary', // Maps to theme secondary
       schedule: [],
       materials: [],
       assignments: [],
@@ -59,7 +59,7 @@ const Courses = () => {
       location: 'Design Studio', 
       description: 'Creating interactive prototypes for mobile applications.',
       progress: 80, 
-      color: 'bg-brand-blue shadow-brand-blue/20',
+      color: 'info', // Maps to theme info
       schedule: [],
       materials: [],
       assignments: [],
@@ -79,7 +79,7 @@ const Courses = () => {
       location: 'Research Lab', 
       description: 'Qualitative and quantitative user research techniques.',
       progress: 0, 
-      color: 'bg-emerald-500 shadow-emerald-500/20',
+      color: 'success', // Maps to theme success
       schedule: [],
       materials: [],
       assignments: [],

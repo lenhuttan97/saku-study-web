@@ -13,9 +13,9 @@ interface ProgressBarProps extends Omit<LinearProgressProps, 'variant'> {
 const colorMap = {
   primary: { bgcolor: 'primary.main', track: 'slate.200' },
   secondary: { bgcolor: 'secondary.main', track: 'slate.200' },
-  success: { bgcolor: '#10B981', track: 'slate.200' },
-  warning: { bgcolor: '#F59E0B', track: 'slate.200' },
-  error: { bgcolor: '#EF4444', track: 'slate.200' },
+  success: { bgcolor: 'success.main', track: 'slate.200' },
+  warning: { bgcolor: 'warning.main', track: 'slate.200' },
+  error: { bgcolor: 'error.main', track: 'slate.200' },
 };
 
 export function ProgressBar({ 

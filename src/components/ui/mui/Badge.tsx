@@ -13,12 +13,12 @@ interface BadgeProps extends Omit<ChipProps, 'color'> {
 }
 
 const colorStyles = {
-  primary: { bgcolor: 'primary.main', color: 'white' },
-  secondary: { bgcolor: 'secondary.main', color: 'white' },
-  success: { bgcolor: '#10B981', color: 'white' }, // emerald-500
-  warning: { bgcolor: '#F59E0B', color: 'white' }, // amber-500
-  error: { bgcolor: '#EF4444', color: 'white' }, // red-500
-  info: { bgcolor: '#3B82F6', color: 'white' }, // blue-500
+  primary: { bgcolor: 'primary.main', color: 'primary.contrastText' },
+  secondary: { bgcolor: 'secondary.main', color: 'secondary.contrastText' },
+  success: { bgcolor: 'success.main', color: 'success.contrastText' }, // emerald-500
+  warning: { bgcolor: 'warning.main', color: 'warning.contrastText' }, // amber-500
+  error: { bgcolor: 'error.main', color: 'error.contrastText' }, // red-500
+  info: { bgcolor: 'info.main', color: 'info.contrastText' }, // blue-500
 };
 
 const sizeStyles = {

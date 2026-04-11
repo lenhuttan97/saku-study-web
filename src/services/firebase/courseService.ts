@@ -26,7 +26,7 @@ const courseConverter: FirestoreDataConverter<Course> = {
       code: data.code ?? '',
       instructor: data.instructor ?? '',
       credits: data.credits ?? 0,
-      color: data.color ?? '#7C3AED',
+      color: data.color ?? 'primary', // Use theme primary color identifier
       schedule: data.schedule ?? [],
       materials: data.materials ?? [],
       assignments: data.assignments ?? [],
