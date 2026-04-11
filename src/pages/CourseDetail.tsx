@@ -1,18 +1,25 @@
-import React, { useState } from 'react';
+import React, { useMemo, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { motion, AnimatePresence } from 'motion/react';
-import { 
-  Info, 
-  Calendar, 
-  FileText, 
-  CheckSquare, 
-  Plus
+import {
+  Info,
+  Calendar,
+  FileText,
+  CheckSquare,
+  Plus,
 } from 'lucide-react';
 import { Button, Tabs, Card } from '@/components/ui';
-import { CourseHeader, MaterialItem, CourseTasksList, CourseScheduleGrid } from '@/features/courses';
+import { CourseHeader, MaterialItem, CourseTasksList, CourseScheduleGrid, useCourseById } from '@/features/courses';
+
+const formatFileSize = (size?: number): string => {
+  if (!size) return 'Unknown size';
+  if (size >= 1024 * 1024) return `${(size / (1024 * 1024)).toFixed(1)} MB`;
+  if (size >= 1024) return `${Math.round(size / 1024)} KB`;
+  return `${size} B`;
+};
 
 const CourseDetail = () => {
-  const { id } = useParams();
+  const { id } = useParams<{ id: string }>();
   const [activeTab, setActiveTab] = useState('info');
 
   const tabs = [
@@ -22,49 +29,110 @@ const CourseDetail = () => {
     { id: 'tasks', label: 'Tasks', icon: <CheckSquare size={18} /> },
   ];
 
-  // Mock data
-  const course = {
-    id: '1',
-    name: 'Graphic Design Basics',
-    teacher: 'Prof. Elena Vance',
-    location: 'Room 402',
-    semester: 'Spring 2026',
-    description: 'This course covers the fundamental principles of graphic design, including layout, typography, and color theory. Students will learn to use industry-standard software to create visual solutions for various communication problems.',
-    progress: 65,
-    color: 'bg-brand-purple',
-    materials: [
-      { name: 'Syllabus_Spring2026.pdf', size: '1.2 MB', date: 'Mar 15, 2026' },
-      { name: 'Color_Theory_Lecture.pptx', size: '4.5 MB', date: 'Mar 20, 2026' },
-      { name: 'Project_1_Brief.pdf', size: '800 KB', date: 'Mar 22, 2026' },
-    ],
-    tasks: [
-      { id: 1, title: 'Logo Sketches', status: 'done', dueDate: 'Mar 25' },
-      { id: 2, title: 'Color Palette Selection', status: 'in-progress', dueDate: 'Apr 10' },
-      { id: 3, title: 'Final Logo Design', status: 'upcoming', dueDate: 'Apr 20' },
-    ]
-  };
+  const safeCourseId = id ?? '';
+  const { course, loading, error } = useCourseById(safeCourseId);
 
-  const scheduleEvents = [
-    { day: 1, time: '09:00', title: 'Lecture', location: 'Room 402', type: 'Lecture' as const, color: 'bg-brand-purple' },
-    { day: 3, time: '11:00', title: 'Workshop', location: 'Studio A', type: 'Workshop' as const, color: 'bg-brand-pink' },
-  ];
+  const scheduleEvents = useMemo(() => {
+    if (!course) return [];
+
+    return course.schedule
+      .filter((item) => item.dayOfWeek >= 1 && item.dayOfWeek <= 5)
+      .map((item) => ({
+        day: item.dayOfWeek,
+        time: item.startTime,
+        title: item.type,
+        location: item.location || course.location || 'TBD',
+        type: item.type === 'lecture' ? 'Lecture' as const : item.type === 'lab' ? 'Lab' as const : 'Workshop' as const,
+        color: course.color || 'bg-brand-purple',
+      }));
+  }, [course]);
+
+  const materialItems = useMemo(() => {
+    if (!course) return [];
+
+    return course.materials.map((material) => ({
+      name: material.fileName || material.title,
+      size: formatFileSize(material.size),
+      date: material.uploadedAt ? new Date(material.uploadedAt).toLocaleDateString() : 'N/A',
+    }));
+  }, [course]);
+
+  const taskItems = useMemo(() => {
+    if (!course) return [];
+
+    const assignmentTasks = course.assignments.map((assignment, index) => ({
+      id: index + 1,
+      title: assignment.title,
+      status: assignment.completed ? 'done' : 'in-progress',
+      dueDate: assignment.dueDate ? new Date(assignment.dueDate).toLocaleDateString() : 'No due date',
+    }));
+
+    const examTasks = course.exams.map((exam, index) => ({
+      id: assignmentTasks.length + index + 1,
+      title: exam.title,
+      status: exam.completed ? 'done' : 'upcoming',
+      dueDate: exam.examDate ? new Date(exam.examDate).toLocaleDateString() : 'No date',
+    }));
+
+    return [...assignmentTasks, ...examTasks];
+  }, [course]);
+
+  if (!id) {
+    return (
+      <div className="max-w-7xl mx-auto py-12 text-center">
+        <h2 className="text-2xl font-bold text-slate-900 mb-2">Course not found</h2>
+        <p className="text-slate-500 mb-6">Invalid course ID.</p>
+        <Button onClick={() => window.history.back()}>Go Back</Button>
+      </div>
+    );
+  }
+
+  if (loading) {
+    return (
+      <div className="max-w-7xl mx-auto space-y-8">
+        <div className="animate-pulse space-y-6">
+          <div className="h-6 w-40 bg-slate-200 rounded" />
+          <div className="h-20 w-full bg-slate-200 rounded-3xl" />
+          <div className="h-[420px] w-full bg-slate-200 rounded-3xl" />
+        </div>
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="max-w-7xl mx-auto py-12 text-center">
+        <h2 className="text-2xl font-bold text-slate-900 mb-2">Failed to load course</h2>
+        <p className="text-slate-500 mb-6">{error}</p>
+        <Button onClick={() => window.location.reload()}>Retry</Button>
+      </div>
+    );
+  }
+
+  if (!course) {
+    return (
+      <div className="max-w-7xl mx-auto py-12 text-center">
+        <h2 className="text-2xl font-bold text-slate-900 mb-2">Course not found</h2>
+        <p className="text-slate-500 mb-6">The requested course does not exist.</p>
+        <Button onClick={() => window.history.back()}>Go Back</Button>
+      </div>
+    );
+  }
 
   return (
     <div className="max-w-7xl mx-auto space-y-8">
-      {/* Using CourseHeader */}
-      <CourseHeader 
-        name={course.name}
-        teacher={course.teacher}
-        location={course.location}
-        semester={course.semester}
-        color={course.color}
+      <CourseHeader
+        name={course.name || course.title || 'Untitled Course'}
+        teacher={course.teacher || course.instructor || 'Unknown instructor'}
+        location={course.location || 'TBD'}
+        semester={course.code || 'Current term'}
+        color={course.color || 'bg-brand-purple'}
       />
 
-      {/* MUI Tabs */}
       <div className="bg-white rounded-3xl border border-slate-100 card-shadow overflow-hidden">
-        <Tabs 
-          tabs={tabs} 
-          value={activeTab} 
+        <Tabs
+          tabs={tabs}
+          value={activeTab}
           onChange={setActiveTab}
         />
 
@@ -82,14 +150,16 @@ const CourseDetail = () => {
                   <section>
                     <h3 className="text-xl font-bold text-slate-800 mb-4">Description</h3>
                     <p className="text-slate-600 leading-relaxed text-lg">
-                      {course.description}
+                      {course.description || 'No description available for this course yet.'}
                     </p>
                   </section>
-                  
+
                   <section className="grid grid-cols-1 sm:grid-cols-2 gap-6">
                     <Card elevation="low">
                       <h4 className="font-bold text-slate-800 mb-2">Next Lesson</h4>
-                      <p className="text-slate-500 text-sm mb-4">Tomorrow at 09:00 AM</p>
+                      <p className="text-slate-500 text-sm mb-4">
+                        {scheduleEvents[0] ? `${scheduleEvents[0].title} at ${scheduleEvents[0].time}` : 'No lesson scheduled yet'}
+                      </p>
                       <div className="flex items-center gap-2 text-brand-purple font-bold cursor-pointer hover:underline">
                         <Calendar size={16} />
                         <span>Add to Calendar</span>
@@ -97,29 +167,31 @@ const CourseDetail = () => {
                     </Card>
                     <Card elevation="low">
                       <h4 className="font-bold text-slate-800 mb-2">Current Progress</h4>
-                      <p className="text-slate-500 text-sm mb-4">You have completed 8/12 lessons</p>
+                      <p className="text-slate-500 text-sm mb-4">
+                        Progress based on course tracking
+                      </p>
                       <div className="h-2 bg-slate-200 rounded-full overflow-hidden">
-                        <div className="h-full bg-brand-purple w-2/3 rounded-full"></div>
+                        <div className="h-full bg-brand-purple rounded-full" style={{ width: `${course.progress ?? 0}%` }} />
                       </div>
                     </Card>
                   </section>
                 </div>
-                
+
                 <div className="space-y-8">
                   <Card elevation="none" className="bg-brand-purple/5 border border-brand-purple/10">
                     <h3 className="text-lg font-bold text-slate-800 mb-4">Quick Stats</h3>
                     <div className="space-y-4">
                       <div className="flex justify-between items-center">
-                        <span className="text-slate-500">Attendance</span>
-                        <span className="font-bold text-slate-800">95%</span>
+                        <span className="text-slate-500">Progress</span>
+                        <span className="font-bold text-slate-800">{course.progress ?? 0}%</span>
                       </div>
                       <div className="flex justify-between items-center">
                         <span className="text-slate-500">Assignments</span>
-                        <span className="font-bold text-slate-800">12/15</span>
+                        <span className="font-bold text-slate-800">{course.assignments.length}</span>
                       </div>
                       <div className="flex justify-between items-center">
-                        <span className="text-slate-500">Grade Average</span>
-                        <span className="font-bold text-brand-purple">A-</span>
+                        <span className="text-slate-500">Materials</span>
+                        <span className="font-bold text-brand-purple">{course.materials.length}</span>
                       </div>
                     </div>
                   </Card>
@@ -141,11 +213,15 @@ const CourseDetail = () => {
                     Upload New
                   </Button>
                 </div>
-                
+
                 <div className="grid grid-cols-1 gap-4">
-                  {course.materials.map((file, idx) => (
-                    <MaterialItem key={idx} {...file} />
-                  ))}
+                  {materialItems.length > 0 ? materialItems.map((file, idx) => (
+                    <MaterialItem key={`${file.name}-${idx}`} {...file} />
+                  )) : (
+                    <Card elevation="low" className="text-center text-slate-500 py-8">
+                      No materials yet.
+                    </Card>
+                  )}
                 </div>
               </motion.div>
             )}
@@ -157,11 +233,10 @@ const CourseDetail = () => {
                 animate={{ opacity: 1, x: 0 }}
                 exit={{ opacity: 0, x: -20 }}
               >
-                {/* Using CourseTasksList */}
-                <CourseTasksList tasks={course.tasks} />
+                <CourseTasksList tasks={taskItems} />
               </motion.div>
             )}
-            
+
             {activeTab === 'schedule' && (
               <motion.div
                 key="schedule"
@@ -169,7 +244,6 @@ const CourseDetail = () => {
                 animate={{ opacity: 1, x: 0 }}
                 exit={{ opacity: 0, x: -20 }}
               >
-                {/* Using CourseScheduleGrid */}
                 <CourseScheduleGrid events={scheduleEvents} />
               </motion.div>
             )}

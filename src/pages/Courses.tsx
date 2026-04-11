@@ -1,93 +1,147 @@
 import React, { useState } from 'react';
 import { Plus, Filter } from 'lucide-react';
-import { Button, Dialog, DialogHeader, DialogContent, DialogActions, Input, Card, SearchInput } from '@/components/ui';
+import { Button, Dialog, DialogHeader, DialogContent, DialogActions, Input, SearchInput } from '@/components/ui';
 import { CourseCard } from '@/features/courses';
 import type { Course } from '@/types';
+import { useCourses } from '@/hooks/useCourses';
 
 const Courses = () => {
   const [showModal, setShowModal] = useState(false);
-  const courses: Course[] = [
-    { 
-      id: '1', 
-      userId: 'user1',
-      title: 'Graphic Design Basics',
-      name: 'Graphic Design Basics', 
-      instructor: 'Prof. Elena Vance',
-      teacher: 'Prof. Elena Vance', 
-      code: 'DES101',
-      credits: 3,
-      location: 'Room 402', 
-      description: 'Introduction to visual communication and design principles.',
-      progress: 65, 
-      color: 'bg-brand-purple shadow-brand-purple/20',
-      schedule: [],
-      materials: [],
-      assignments: [],
-      exams: [],
-      createdAt: new Date(),
-      updatedAt: new Date()
-    },
-    { 
-      id: '2', 
-      userId: 'user1',
-      title: 'Advanced Web Development',
-      name: 'Advanced Web Development', 
-      instructor: 'Dr. Marcus Chen',
-      teacher: 'Dr. Marcus Chen', 
-      code: 'WEB201',
-      credits: 4,
-      location: 'Lab 301', 
-      description: 'Deep dive into modern web technologies and frameworks.',
-      progress: 30, 
-      color: 'bg-brand-pink shadow-brand-pink/20',
-      schedule: [],
-      materials: [],
-      assignments: [],
-      exams: [],
-      createdAt: new Date(),
-      updatedAt: new Date()
-    },
-    { 
-      id: '3', 
-      userId: 'user1',
-      title: 'Mobile App Prototyping',
-      name: 'Mobile App Prototyping', 
-      instructor: 'Alex Rivera',
-      teacher: 'Alex Rivera', 
-      code: 'MOB301',
-      credits: 3,
-      location: 'Design Studio', 
-      description: 'Creating interactive prototypes for mobile applications.',
-      progress: 80, 
-      color: 'bg-brand-blue shadow-brand-blue/20',
-      schedule: [],
-      materials: [],
-      assignments: [],
-      exams: [],
-      createdAt: new Date(),
-      updatedAt: new Date()
-    },
-    { 
-      id: '4', 
-      userId: 'user1',
-      title: 'UX Research Methods',
-      name: 'UX Research Methods', 
-      instructor: 'Dr. Sarah Johnson',
-      teacher: 'Dr. Sarah Johnson', 
-      code: 'UXR401',
-      credits: 3,
-      location: 'Research Lab', 
-      description: 'Qualitative and quantitative user research techniques.',
-      progress: 0, 
-      color: 'bg-emerald-500 shadow-emerald-500/20',
-      schedule: [],
-      materials: [],
-      assignments: [],
-      exams: [],
-      createdAt: new Date(),
-      updatedAt: new Date()
-    },
-  ];
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [formData, setFormData] = useState({
+    name: '',
+    instructor: '',
+    semester: '',
+    location: '',
+    description: ''
+  });
+  
+  const { courses, loading, error, refetch, createCourse } = useCourses();
+
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { name, value } = e.target;
+    setFormData(prev => ({
+      ...prev,
+      [name]: value
+    }));
+  };
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    
+    setIsSubmitting(true);
+    try {
+      await createCourse({
+        title: formData.name,
+        name: formData.name,
+        instructor: formData.instructor,
+        teacher: formData.instructor,
+        code: formData.name.substring(0, 3).toUpperCase() + '101', // Generate a simple code
+        credits: 3, // Default credits
+        location: formData.location,
+        description: formData.description,
+        progress: 0, // Default progress
+        color: 'bg-brand-purple shadow-brand-purple/20', // Default color
+        schedule: [],
+        materials: [],
+        assignments: [],
+        exams: [],
+        createdAt: new Date(),
+        updatedAt: new Date()
+      });
+      
+      // Reset form and close modal
+      setFormData({
+        name: '',
+        instructor: '',
+        semester: '',
+        location: '',
+        description: ''
+      });
+      setShowModal(false);
+    } catch (err) {
+      console.error('Failed to create course:', err);
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
+
+  const handleRetry = () => {
+    refetch();
+  };
+
+  if (loading && courses.length === 0) {
+    return (
+      <div className="max-w-7xl mx-auto space-y-8 p-8">
+        <header className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+          <div>
+            <h1 className="text-3xl font-bold text-slate-900 tracking-tight">Your Courses</h1>
+            <p className="text-slate-500 mt-1">Manage your academic journey and track progress.</p>
+          </div>
+          <Button 
+            onClick={() => setShowModal(true)}
+            startIcon={<Plus size={20} />}
+            disabled
+          >
+            New Course
+          </Button>
+        </header>
+        
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+          {[1, 2, 3, 4].map((item) => (
+            <div key={item} className="animate-pulse">
+              <div className="p-6 bg-white rounded-2xl shadow-sm border border-slate-100">
+                <div className="flex items-start justify-between">
+                  <div className="w-14 h-14 rounded-2xl bg-slate-200"></div>
+                  <div className="w-8 h-8 rounded-full bg-slate-200"></div>
+                </div>
+                
+                <div className="space-y-3 mt-4">
+                  <div className="h-5 bg-slate-200 rounded w-3/4"></div>
+                  <div className="h-4 bg-slate-200 rounded w-full"></div>
+                  <div className="h-4 bg-slate-200 rounded w-2/3"></div>
+                </div>
+                
+                <div className="pt-4 space-y-3">
+                  <div className="h-4 bg-slate-200 rounded w-5/6"></div>
+                  <div className="h-4 bg-slate-200 rounded w-4/6"></div>
+                </div>
+                
+                <div className="pt-4">
+                  <div className="h-2 bg-slate-200 rounded-full w-full mb-2"></div>
+                </div>
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="max-w-7xl mx-auto space-y-8 p-8">
+        <header className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+          <div>
+            <h1 className="text-3xl font-bold text-slate-900 tracking-tight">Your Courses</h1>
+            <p className="text-slate-500 mt-1">Manage your academic journey and track progress.</p>
+          </div>
+          <Button 
+            onClick={() => setShowModal(true)}
+            startIcon={<Plus size={20} />}
+          >
+            New Course
+          </Button>
+        </header>
+        
+        <div className="flex flex-col items-center justify-center py-12">
+          <div className="text-red-500 text-lg font-medium mb-2">Error loading courses</div>
+          <p className="text-slate-500 mb-6 text-center">{error}</p>
+          <Button onClick={handleRetry}>Try Again</Button>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="max-w-7xl mx-auto space-y-8">
@@ -107,57 +161,79 @@ const Courses = () => {
       {/* Create Course Modal - Using MUI Dialog */}
       <Dialog 
         open={showModal} 
-        onClose={() => setShowModal(false)}
+        onClose={() => !isSubmitting && setShowModal(false)}
         title=""
       >
         <DialogHeader>
           <h2 className="text-2xl font-bold text-slate-900">Create New Course</h2>
           <Button 
             variant="ghost" 
-            onClick={() => setShowModal(false)}
+            onClick={() => !isSubmitting && setShowModal(false)}
             className="p-2"
+            disabled={isSubmitting}
           >
             <Plus size={24} className="rotate-45" />
           </Button>
         </DialogHeader>
 
         <DialogContent>
-          <form className="space-y-6">
+          <form onSubmit={handleSubmit} className="space-y-6">
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
               <Input 
+                name="name"
                 label="Course Name"
                 placeholder="e.g. Graphic Design"
+                value={formData.name}
+                onChange={handleInputChange}
+                required
               />
               <Input 
+                name="instructor"
                 label="Teacher"
                 placeholder="Prof. Elena Vance"
+                value={formData.instructor}
+                onChange={handleInputChange}
+                required
               />
               <Input 
+                name="semester"
                 label="Semester"
                 placeholder="Spring 2026"
+                value={formData.semester}
+                onChange={handleInputChange}
               />
               <Input 
+                name="location"
                 label="Location"
                 placeholder="Room 402"
+                value={formData.location}
+                onChange={handleInputChange}
               />
             </div>
 
             <Input 
+              name="description"
               label="Description"
               placeholder="Briefly describe the course goals and content..."
               multiline
               rows={4}
+              value={formData.description}
+              onChange={handleInputChange}
             />
 
             <DialogActions>
               <Button 
                 variant="ghost" 
-                onClick={() => setShowModal(false)}
+                onClick={() => !isSubmitting && setShowModal(false)}
+                disabled={isSubmitting}
               >
                 Cancel
               </Button>
-              <Button type="submit">
-                Create Course
+              <Button 
+                type="submit" 
+                disabled={isSubmitting}
+              >
+                {isSubmitting ? 'Creating...' : 'Create Course'}
               </Button>
             </DialogActions>
           </form>
