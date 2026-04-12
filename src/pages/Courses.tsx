@@ -1,6 +1,16 @@
 import React, { useState } from 'react';
 import { Plus, Filter } from 'lucide-react';
-import { Button, Dialog, DialogHeader, DialogContent, DialogActions, Input, SearchInput } from '@/components/ui';
+import {
+  Button,
+  Dialog,
+  DialogHeader,
+  DialogContent,
+  DialogActions,
+  Input,
+  SearchInput,
+  LoadingSpinner,
+  LoadingError,
+} from '@/components/ui';
 import { CourseCard } from '@/features/courses';
 import type { Course } from '@/types';
 import { useCourses } from '@/hooks/useCourses';
@@ -127,73 +137,22 @@ const Courses = () => {
 
   if (loading && courses.length === 0) {
     return (
-      <div className="max-w-7xl mx-auto space-y-8 p-8">
-        <header className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-          <div>
-            <h1 className="text-3xl font-bold text-slate-900 tracking-tight">Your Courses</h1>
-            <p className="text-slate-500 mt-1">Manage your academic journey and track progress.</p>
-          </div>
-          <Button
-            onClick={() => setShowModal(true)}
-            startIcon={<Plus size={20} />}
-            disabled
-          >
-            New Course
-          </Button>
-        </header>
-
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-          {[1, 2, 3, 4].map((item) => (
-            <div key={item} className="animate-pulse">
-              <div className="p-6 bg-white rounded-2xl shadow-sm border border-slate-100">
-                <div className="flex items-start justify-between">
-                  <div className="w-14 h-14 rounded-2xl bg-slate-200"></div>
-                  <div className="w-8 h-8 rounded-full bg-slate-200"></div>
-                </div>
-
-                <div className="space-y-3 mt-4">
-                  <div className="h-5 bg-slate-200 rounded w-3/4"></div>
-                  <div className="h-4 bg-slate-200 rounded w-full"></div>
-                  <div className="h-4 bg-slate-200 rounded w-2/3"></div>
-                </div>
-
-                <div className="pt-4 space-y-3">
-                  <div className="h-4 bg-slate-200 rounded w-5/6"></div>
-                  <div className="h-4 bg-slate-200 rounded w-4/6"></div>
-                </div>
-
-                <div className="pt-4">
-                  <div className="h-2 bg-slate-200 rounded-full w-full mb-2"></div>
-                </div>
-              </div>
-            </div>
-          ))}
-        </div>
+      <div className="max-w-7xl mx-auto py-12">
+        <LoadingSpinner text="Loading courses..." className="min-h-[40vh]" />
       </div>
     );
   }
 
   if (error) {
     return (
-      <div className="max-w-7xl mx-auto space-y-8 p-8">
-        <header className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-          <div>
-            <h1 className="text-3xl font-bold text-slate-900 tracking-tight">Your Courses</h1>
-            <p className="text-slate-500 mt-1">Manage your academic journey and track progress.</p>
-          </div>
-          <Button
-            onClick={() => setShowModal(true)}
-            startIcon={<Plus size={20} />}
-          >
-            New Course
-          </Button>
-        </header>
-
-        <div className="flex flex-col items-center justify-center py-12">
-          <div className="text-red-500 text-lg font-medium mb-2">Error loading courses</div>
-          <p className="text-slate-500 mb-6 text-center">{error}</p>
-          <Button onClick={handleRetry}>Try Again</Button>
-        </div>
+      <div className="max-w-7xl mx-auto py-12">
+        <LoadingError
+          title="Failed to load courses"
+          message={error}
+          retryText="Try Again"
+          onRetry={handleRetry}
+          className="min-h-[40vh]"
+        />
       </div>
     );
   }
